@@ -8,11 +8,11 @@ using Microsoft.Extensions.Logging;
 
 namespace ChatDemoR.Pages
 {
-    public class PrivacyModel : PageModel
+    public class VoteModel : PageModel
     {
-        private readonly ILogger<PrivacyModel> _logger;
+        private readonly ILogger<VoteModel> _logger;
 
-        public PrivacyModel(ILogger<PrivacyModel> logger)
+        public VoteModel(ILogger<VoteModel> logger)
         {
             _logger = logger;
         }
