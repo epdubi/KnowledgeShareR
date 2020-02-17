@@ -2,6 +2,8 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+    var question = Model.Question;
+    var answers = Model.Answers;
 }
 
 <div class="row">
@@ -14,3 +16,10 @@
         <ul id="messagesList"></ul>
     </div>
 </div>
+{
+    @question.Text
+}
+@foreach (var item in answers)
+{
+    <li>@item.Text</li>
+}
