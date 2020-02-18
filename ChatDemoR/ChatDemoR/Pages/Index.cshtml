@@ -2,8 +2,10 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
-    var question = Model.Question;
-    var answers = Model.Answers;
+    var Question = Model.Questions.First();
+    var Answers = Model.Answers;
+    var jQuestion = Model.JsonQuestion;
+    var jAnswers = Model.JsonAnswers;
 }
 
 <div class="row">
@@ -17,9 +19,17 @@
     </div>
 </div>
 {
-    @question.Text
+    @jQuestion.Text
 }
-@foreach (var item in answers)
+@foreach (var item in jAnswers)
+{
+    <li>@item.Text</li>
+}
+
+{
+    @Question.Text
+}
+@foreach (var item in Answers)
 {
     <li>@item.Text</li>
 }

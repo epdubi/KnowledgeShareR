@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ChatDemoR.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatDemoR
 {
@@ -22,6 +24,9 @@ namespace ChatDemoR
         {
             services.AddRazorPages();
             services.AddSignalR();
+
+            services.AddDbContext<PresentationContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("PresentationContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
