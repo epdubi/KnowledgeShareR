@@ -33,10 +33,10 @@ namespace KnowledgeShareR.Pages
 
         public void OnGet()
         {
-            var optionsBuilder = new DbContextOptionsBuilder<PresentationContext>();
-            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("PresentationContext"));
+            var optionsBuilder = new DbContextOptionsBuilder<KnowledgeShareDbContext>();
+            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("KnowledgeShareDbContext"));
 
-            using(var context = new PresentationContext(optionsBuilder.Options))
+            using(var context = new KnowledgeShareDbContext(optionsBuilder.Options))
             {
                 this.Questions = context.Questions.Select(x => x).ToList();
                 this.Answers = context.Questions.Where(x => x.Id == 1).SelectMany(x => x.Answers).ToList();

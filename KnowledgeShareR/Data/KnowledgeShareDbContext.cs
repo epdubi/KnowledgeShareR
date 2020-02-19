@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeShareR.Data
 {
-    public class PresentationContext : DbContext
+    public class KnowledgeShareDbContext : DbContext
     {
-        public PresentationContext (DbContextOptions<PresentationContext> options)
+        public KnowledgeShareDbContext (DbContextOptions<KnowledgeShareDbContext> options)
             : base(options)
         {
         }

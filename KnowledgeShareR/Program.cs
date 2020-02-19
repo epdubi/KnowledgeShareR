@@ -30,7 +30,7 @@ namespace KnowledgeShareR
 
                 try
                 {
-                    var context = services.GetRequiredService<PresentationContext>();
+                    var context = services.GetRequiredService<KnowledgeShareDbContext>();
                     context.Database.EnsureCreated();
                 }
                 catch (Exception ex)
