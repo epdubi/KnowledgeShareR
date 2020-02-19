@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ChatDemoR.Hubs
+namespace KnowledgeShareR.Hubs
 {
     public class ChatHub : Hub
     {

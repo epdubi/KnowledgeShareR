@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using ChatDemoR.Models;
-using ChatDemoR.Data;
+using KnowledgeShareR.Models;
+using KnowledgeShareR.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace ChatDemoR.Pages
+namespace KnowledgeShareR.Pages
 {
     public class IndexModel : PageModel
     {

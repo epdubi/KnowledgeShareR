@@ -1,14 +1,14 @@
-using ChatDemoR.Hubs;
+using KnowledgeShareR.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ChatDemoR.Data;
+using KnowledgeShareR.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace ChatDemoR
+namespace KnowledgeShareR
 {
     public class Startup
     {

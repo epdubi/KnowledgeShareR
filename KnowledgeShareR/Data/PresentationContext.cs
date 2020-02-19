@@ -1,7 +1,7 @@
-using ChatDemoR.Models;
+using KnowledgeShareR.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ChatDemoR.Data
+namespace KnowledgeShareR.Data
 {
     public class PresentationContext : DbContext
     {

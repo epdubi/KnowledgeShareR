@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using ChatDemoR.Data;
+using KnowledgeShareR.Data;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ChatDemoR
+namespace KnowledgeShareR
 {
     public class Program
     {
