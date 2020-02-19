@@ -27,10 +27,6 @@ namespace KnowledgeShareR.Pages
         public List<Question> Questions {get; set;}
         public List<Answer> Answers {get; set;}
 
-        public Question JsonQuestion {get; set;}
-
-        public List<Answer> JsonAnswers {get; set;}
-
         public void OnGet()
         {
             var optionsBuilder = new DbContextOptionsBuilder<KnowledgeShareDbContext>();
@@ -39,15 +35,7 @@ namespace KnowledgeShareR.Pages
             using(var context = new KnowledgeShareDbContext(optionsBuilder.Options))
             {
                 this.Questions = context.Questions.Select(x => x).ToList();
-                this.Answers = context.Questions.Where(x => x.Id == 1).SelectMany(x => x.Answers).ToList();
-            }
-            
-            using (StreamReader r = new StreamReader("data.json"))
-            {
-                string json = r.ReadToEnd();
-                RootObject root = JsonConvert.DeserializeObject<RootObject>(json);
-                this.JsonQuestion = root.Question;
-                this.JsonAnswers = root.Question.Answers;
+                this.Answers = context.Questions.Where(x => x.QuestionId == 1).SelectMany(x => x.Answers).ToList();
             }
         }
     }

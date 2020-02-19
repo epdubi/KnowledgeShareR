@@ -4,8 +4,6 @@
     ViewData["Title"] = "Home page";
     var Question = Model.Questions.First();
     var Answers = Model.Answers;
-    var jQuestion = Model.JsonQuestion;
-    var jAnswers = Model.JsonAnswers;
 }
 
 <div class="row">
@@ -18,18 +16,10 @@
         <ul id="messagesList"></ul>
     </div>
 </div>
-{
-    @jQuestion.Text
-}
-@foreach (var item in jAnswers)
-{
-    <li>@item.Text</li>
-}
-
-{
-    @Question.Text
-}
+<h2>@Question.Text</h2>
+<ul>
 @foreach (var item in Answers)
 {
     <li>@item.Text</li>
 }
+</ul>

@@ -5,13 +5,12 @@ namespace KnowledgeShareR.Data
 {
     public class KnowledgeShareDbContext : DbContext
     {
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<Answer> Answers { get; set; }
         public KnowledgeShareDbContext (DbContextOptions<KnowledgeShareDbContext> options)
             : base(options)
         {
         }
-
-        public DbSet<Question> Questions { get; set; }
-        public DbSet<Answer> Answers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
