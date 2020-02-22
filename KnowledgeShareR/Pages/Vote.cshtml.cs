@@ -12,13 +12,23 @@ namespace KnowledgeShareR.Pages
     {
         private readonly ILogger<VoteModel> _logger;
 
+        public string UserName { get; set; }
+
         public VoteModel(ILogger<VoteModel> logger)
         {
             _logger = logger;
+
         }
 
         public void OnGet()
         {
+            this.UserName = "";
+        }
+
+        public void OnPost()
+        {
+            var userName = Request.Form["UserName"];
+            this.UserName = userName;
         }
     }
 }
