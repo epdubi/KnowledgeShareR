@@ -2,24 +2,28 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
-    var Question = Model.Questions.First();
-    var Answers = Model.Answers;
+    var question = Model.Questions.FirstOrDefault();
+    var answers = Model.Answers;
 }
 
 <div class="row">
     <div class="col-12">
-        <h1>User Votes</h1>
+        <h2>@question.Text</h2>
+        <ul>
+        @foreach (var item in answers)
+        {
+            <li>@item.Text</li>
+        }
+        </ul>
     </div>
 </div>
 <div class="row">
     <div class="col-6">
+        <h2>Connected Users</h2>
+        <ul id="usersList"></ul>
+    </div>
+    <div class="col-6">
+        <h2>User Votes</h2>
         <ul id="messagesList"></ul>
     </div>
 </div>
-<h2>@Question.Text</h2>
-<ul>
-@foreach (var item in Answers)
-{
-    <li>@item.Text</li>
-}
-</ul>

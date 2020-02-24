@@ -4,11 +4,12 @@ const connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build(
 
 const sendBtn = document.getElementById("sendButton");
 const countDownBtn = document.getElementById("countDownButton");
+const userForm = document.getElementById("usernameInput");
 
 if(sendBtn != undefined && countDownBtn != undefined)
 {
     sendBtn.addEventListener("click", function (event) {
-        const user = document.getElementById("userInput").value;
+        const user = document.getElementById("username").innerText;
         const message = document.getElementById("messageInput").value;
         console.log(user);
         connection.invoke("SendMessage", user, message).catch(function (err) {
@@ -24,6 +25,20 @@ if(sendBtn != undefined && countDownBtn != undefined)
         });
     
         event.preventDefault();
+    });
+}
+
+if(userForm != undefined)
+{
+    userForm.addEventListener("submit", function (event) {
+        const username = document.getElementById("UserName").value;
+        if(username)
+        {
+            document.cookie = `username=${username}`;
+            connection.invoke("ConnectUser", username).catch(function (err) {
+                return console.error(err.toString());
+            });
+        }
     });
 }
 
@@ -46,3 +61,10 @@ connection.on("CountDownReceived", function (message) {
     li.textContent = message;
     document.getElementById("messagesList").appendChild(li);
 });
+
+connection.on("UserConnected", function (message) {
+    let li = document.createElement("li");
+    li.textContent = message;
+    document.getElementById("usersList").appendChild(li);
+});
+

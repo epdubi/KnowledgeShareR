@@ -22,7 +22,9 @@ namespace KnowledgeShareR.Pages
 
         public void OnGet()
         {
-            this.UserName = "";
+            this.UserName = !string.IsNullOrWhiteSpace(Request.Cookies["username"])
+                                ? Request.Cookies["username"] 
+                                : "";
         }
 
         public void OnPost()

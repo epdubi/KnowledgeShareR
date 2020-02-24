@@ -22,5 +22,10 @@ namespace KnowledgeShareR.Hubs
                 await Clients.All.SendAsync("CountDownReceived", num.ToString());  
             }
         }
+
+        public async Task ConnectUser(string username)
+        {
+            await Clients.All.SendAsync("UserConnected", username);
+        }
     }
 }

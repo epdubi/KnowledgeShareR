@@ -4,27 +4,24 @@
     ViewData["Title"] = "Vote";
     var username = Model.UserName;
 }
-<h1>@ViewData["Title"]</h1>
 
 @if(string.IsNullOrWhiteSpace(username))
 {
-    <h3>Please enter your Username</h3>
-    <form method="post">
+    <h1>Please enter your Username</h1>
+    <form method="post" id="usernameInput">
     @Html.TextBoxFor(o=>o.UserName)
+    <input type="submit">
     </form>
 }
 else
 {
+    <h1>Welcome, <span id="username">@username</span></h1>
     <p>Use this page to cast your vote.</p>
 
     <div class="container">
         <div class="row">&nbsp;</div>
         <div class="row">
-            <div class="col-2">User</div>
-            <div class="col-4"><input type="text" id="userInput" /></div>
-        </div>
-        <div class="row">
-            <div class="col-2">Message</div>
+            <div class="col-2">Answer</div>
             <div class="col-4"><input type="text" id="messageInput" /></div>
         </div>
         <div class="row">&nbsp;</div>
