@@ -48,6 +48,18 @@ connection.start().then(function () {
     return console.error(err.toString());
 });
 
+connection.on("OnConnectedAsync", function (message) {
+    console.log(message);
+});
+
+connection.on("OnDisconnectedAsync", function (message) {
+    let usernameCookie = document.cookie;
+    if(usernameCookie)
+    {
+        usernameCookie = usernameCookie + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
+});
+
 connection.on("ReceiveMessage", function (user, message) {
     let msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     let encodedMsg = user + " says " + msg;

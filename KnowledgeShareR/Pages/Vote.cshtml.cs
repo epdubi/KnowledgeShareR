@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using KnowledgeShareR.Models;
+using KnowledgeShareR.Data;
+using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeShareR.Pages
 {
@@ -12,13 +16,17 @@ namespace KnowledgeShareR.Pages
     {
         private readonly ILogger<VoteModel> _logger;
 
+        public IConfiguration Configuration { get; }
+
         public string UserName { get; set; }
 
-        public VoteModel(ILogger<VoteModel> logger)
+        public VoteModel(ILogger<VoteModel> logger, IConfiguration configuration)
         {
             _logger = logger;
-
+            Configuration = configuration;
         }
+
+         
 
         public void OnGet()
         {
@@ -30,7 +38,19 @@ namespace KnowledgeShareR.Pages
         public void OnPost()
         {
             var userName = Request.Form["UserName"];
-            this.UserName = userName;
+            if(!string.IsNullOrWhiteSpace(userName))
+            {
+                this.UserName = userName;
+
+                var optionsBuilder = new DbContextOptionsBuilder<KnowledgeShareDbContext>();
+                optionsBuilder.UseSqlServer(Configuration.GetConnectionString("KnowledgeShareDbContext"));
+                
+                using(var context = new KnowledgeShareDbContext(optionsBuilder.Options))
+                {
+                    context.ConnectedUsers.Add(new Models.ConnectedUser { UserName = userName });
+                    context.SaveChanges();
+                }
+            }
         }
     }
 }
