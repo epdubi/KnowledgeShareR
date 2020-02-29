@@ -30,12 +30,10 @@ namespace KnowledgeShareR.Pages
 
         public void OnGet()
         {
-            this.UserName = !string.IsNullOrWhiteSpace(Request.Cookies["username"])
-                                ? Request.Cookies["username"] 
-                                : "";
+            
         }
 
-        public void OnPost()
+        public async Task<IActionResult>  OnPostAsync()
         {
             var userName = Request.Form["UserName"];
             if(!string.IsNullOrWhiteSpace(userName))
@@ -45,12 +43,12 @@ namespace KnowledgeShareR.Pages
                 var optionsBuilder = new DbContextOptionsBuilder<KnowledgeShareDbContext>();
                 optionsBuilder.UseSqlServer(Configuration.GetConnectionString("KnowledgeShareDbContext"));
                 
-                using(var context = new KnowledgeShareDbContext(optionsBuilder.Options))
-                {
-                    context.ConnectedUsers.Add(new Models.ConnectedUser { UserName = userName });
-                    context.SaveChanges();
-                }
+                var context = new KnowledgeShareDbContext(optionsBuilder.Options);
+                await context.ConnectedUsers.AddAsync(new Models.ConnectedUser { UserName = userName });
+                await context.SaveChangesAsync();
             }
+
+            return Page();
         }
     }
 }

@@ -34,7 +34,6 @@ if(userForm != undefined)
         const username = document.getElementById("UserName").value;
         if(username)
         {
-            document.cookie = `username=${username}`;
             connection.invoke("ConnectUser", username).catch(function (err) {
                 return console.error(err.toString());
             });
