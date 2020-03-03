@@ -73,9 +73,21 @@ connection.on("CountDownReceived", function (message) {
     document.getElementById("messagesList").appendChild(li);
 });
 
-connection.on("UserConnected", function (message) {
-    let li = document.createElement("li");
-    li.textContent = message;
-    document.getElementById("usersList").appendChild(li);
+connection.on("UserConnected", function (userList) {
+    if(userList)
+    {
+        //Clear User List
+        let list = document.getElementById("usersList");
+        let listUsers = Array.from(list.getElementsByTagName("li"));
+        listUsers.map(x => x.remove());
+
+        let parsedUsers = JSON.parse(userList);
+        console.log(parsedUsers);
+        parsedUsers.forEach(element => {
+            let li = document.createElement("li");
+            li.textContent = element;
+            document.getElementById("usersList").appendChild(li); 
+        });
+    }
 });
 

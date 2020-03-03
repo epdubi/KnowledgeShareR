@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using KnowledgeShareR.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace KnowledgeShareR
 {
@@ -27,6 +28,10 @@ namespace KnowledgeShareR
 
             services.AddDbContext<KnowledgeShareDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("KnowledgeShareDbContext")));
+
+            services.AddDefaultIdentity<IdentityUser>(options =>
+                                                  options.SignIn.RequireConfirmedAccount = true)
+            .AddEntityFrameworkStores<KnowledgeShareDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +53,7 @@ namespace KnowledgeShareR
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

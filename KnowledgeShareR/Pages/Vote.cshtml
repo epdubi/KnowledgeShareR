@@ -5,7 +5,7 @@
     var username = Model.UserName;
 }
 
-@if(string.IsNullOrWhiteSpace(username))
+@if(string.IsNullOrWhiteSpace(username) && !User.Identity.IsAuthenticated)
 {
     <h1>Please enter your Username</h1>
     <form method="post" id="usernameInput">

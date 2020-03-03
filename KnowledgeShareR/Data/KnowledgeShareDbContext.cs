@@ -1,9 +1,11 @@
 using KnowledgeShareR.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeShareR.Data
 {
-    public class KnowledgeShareDbContext : DbContext
+    public class KnowledgeShareDbContext : IdentityDbContext<IdentityUser>
     {
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
@@ -16,6 +18,8 @@ namespace KnowledgeShareR.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Question>()
             .HasMany(b => b.Answers)
             .WithOne(b => b.Question);

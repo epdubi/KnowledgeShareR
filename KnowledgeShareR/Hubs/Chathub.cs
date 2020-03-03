@@ -55,7 +55,11 @@ namespace KnowledgeShareR.Hubs
             {
                 connectedUsers = await context.ConnectedUsers.ToListAsync();
             }
-            await Clients.All.SendAsync("UserConnected", JsonConvert.SerializeObject(connectedUsers));
+
+            var userNameList = connectedUsers.Select(x => x.UserName).Reverse().ToList();
+            userNameList.Insert(0, username);
+
+            await Clients.All.SendAsync("UserConnected", JsonConvert.SerializeObject(userNameList));
         }
     }
 }
