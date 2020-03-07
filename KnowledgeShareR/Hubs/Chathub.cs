@@ -1,5 +1,6 @@
 ﻿using KnowledgeShareR.Data;
 using KnowledgeShareR.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -11,22 +12,37 @@ using System.Threading.Tasks;
 
 namespace KnowledgeShareR.Hubs
 {
+    [Authorize]
     public class ChatHub : Hub
     {
         public IConfiguration Configuration { get; }
+
+        private static HashSet<string> connectedUsers = new HashSet<string>();
+
         public ChatHub(IConfiguration configuration)
         {
             Configuration = configuration;
         }
         public override async Task OnConnectedAsync()
         {
-            await Clients.All.SendAsync("OnConnectedAsync", "OnConnectedAsync Fired");
+            string name = Context.User.Identity.Name;
+            connectedUsers.Add(name);
+
+            var allUsers = connectedUsers.Select(x => x);
+
+            await Clients.All.SendAsync("OnConnectedAsync", JsonConvert.SerializeObject(allUsers));
             await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            await Clients.All.SendAsync("OnDisconnectedAsync", "OnDisconnectedAsync Fired");
+             string name = Context.User.Identity.Name;
+
+            connectedUsers.Remove(name);
+
+            var allUsers = connectedUsers.Select(x => x);
+
+            await Clients.All.SendAsync("OnDisconnectedAsync", JsonConvert.SerializeObject(allUsers));
             await base.OnDisconnectedAsync(exception);
         }
 
@@ -43,23 +59,6 @@ namespace KnowledgeShareR.Hubs
                 await Task.Delay(1200);
                 await Clients.All.SendAsync("CountDownReceived", num.ToString());  
             }
-        }
-
-        public async Task ConnectUser(string username)
-        {
-            var connectedUsers = new List<ConnectedUser>();
-            var optionsBuilder = new DbContextOptionsBuilder<KnowledgeShareDbContext>();
-                optionsBuilder.UseSqlServer(Configuration.GetConnectionString("KnowledgeShareDbContext"));
-                
-            using(var context = new KnowledgeShareDbContext(optionsBuilder.Options))
-            {
-                connectedUsers = await context.ConnectedUsers.ToListAsync();
-            }
-
-            var userNameList = connectedUsers.Select(x => x.UserName).Reverse().ToList();
-            userNameList.Insert(0, username);
-
-            await Clients.All.SendAsync("UserConnected", JsonConvert.SerializeObject(userNameList));
         }
     }
 }

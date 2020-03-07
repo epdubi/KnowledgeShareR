@@ -5,13 +5,9 @@
     var username = Model.UserName;
 }
 
-@if(string.IsNullOrWhiteSpace(username) && !User.Identity.IsAuthenticated)
+@if(string.IsNullOrWhiteSpace(username))
 {
-    <h1>Please enter your Username</h1>
-    <form method="post" id="usernameInput">
-    @Html.TextBoxFor(o=>o.UserName)
-    <input type="submit">
-    </form>
+    <a href="/Identity/Account/Login">Please Login</a>
 }
 else
 {

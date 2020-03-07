@@ -4,7 +4,6 @@
     ViewData["Title"] = "Home page";
     var question = Model.Questions.FirstOrDefault();
     var answers = Model.Answers;
-    var connectedUsers = Model.ConnectedUsers;
 }
 
 <div class="row">
@@ -22,10 +21,6 @@
     <div class="col-6">
         <h2>Connected Users</h2>
         <ul id="usersList">
-            @foreach (var user in connectedUsers)
-            {
-                <li>@user.UserName</li>
-            }
         </ul>
     </div>
     <div class="col-6">

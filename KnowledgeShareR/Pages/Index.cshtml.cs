@@ -26,8 +26,6 @@ namespace KnowledgeShareR.Pages
 
         public List<Question> Questions {get; set;}
         public List<Answer> Answers {get; set;}
-        public List<ConnectedUser> ConnectedUsers {get; set;}
-
         public void OnGet()
         {
             var optionsBuilder = new DbContextOptionsBuilder<KnowledgeShareDbContext>();
@@ -37,7 +35,6 @@ namespace KnowledgeShareR.Pages
             {
                 this.Questions = context.Questions.Select(x => x).ToList();
                 this.Answers = context.Questions.Where(x => x.QuestionId == 1).SelectMany(x => x.Answers).ToList();
-                this.ConnectedUsers = context.ConnectedUsers.Select(x => x).OrderByDescending(x => x.ConnectedUserId).ToList();
             }
         }
     }

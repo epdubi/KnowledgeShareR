@@ -4,7 +4,6 @@ const connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build(
 
 const sendBtn = document.getElementById("sendButton");
 const countDownBtn = document.getElementById("countDownButton");
-const userForm = document.getElementById("usernameInput");
 
 if(sendBtn != undefined && countDownBtn != undefined)
 {
@@ -28,18 +27,6 @@ if(sendBtn != undefined && countDownBtn != undefined)
     });
 }
 
-if(userForm != undefined)
-{
-    userForm.addEventListener("submit", function (event) {
-        const username = document.getElementById("UserName").value;
-        if(username)
-        {
-            connection.invoke("ConnectUser", username).catch(function (err) {
-                return console.error(err.toString());
-            });
-        }
-    });
-}
 
 connection.start().then(function () {
     console.log("Connection Started");
@@ -47,16 +34,40 @@ connection.start().then(function () {
     return console.error(err.toString());
 });
 
-connection.on("OnConnectedAsync", function (message) {
-    console.log(message);
+connection.on("OnConnectedAsync", function (userList) {
+    console.log(userList);
+
+    //Clear User List
+    let list = document.getElementById("usersList");
+    let listUsers = Array.from(list.getElementsByTagName("li"));
+    listUsers.map(x => x.remove());
+
+    let parsedUsers = JSON.parse(userList);
+    console.log(parsedUsers);
+    parsedUsers.forEach(element => {
+        let li = document.createElement("li");
+        console.log(element);
+        li.textContent = element;
+        document.getElementById("usersList").appendChild(li); 
+    });
 });
 
-connection.on("OnDisconnectedAsync", function (message) {
-    let usernameCookie = document.cookie;
-    if(usernameCookie)
-    {
-        usernameCookie = usernameCookie + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    }
+connection.on("OnDisconnectedAsync", function (userList) {
+    console.log(userList);
+
+    //Clear User List
+    let list = document.getElementById("usersList");
+    let listUsers = Array.from(list.getElementsByTagName("li"));
+    listUsers.map(x => x.remove());
+
+    let parsedUsers = JSON.parse(userList);
+    console.log(parsedUsers);
+    parsedUsers.forEach(element => {
+        let li = document.createElement("li");
+        console.log(element);
+        li.textContent = element;
+        document.getElementById("usersList").appendChild(li); 
+    });
 });
 
 connection.on("ReceiveMessage", function (user, message) {
@@ -72,22 +83,3 @@ connection.on("CountDownReceived", function (message) {
     li.textContent = message;
     document.getElementById("messagesList").appendChild(li);
 });
-
-connection.on("UserConnected", function (userList) {
-    if(userList)
-    {
-        //Clear User List
-        let list = document.getElementById("usersList");
-        let listUsers = Array.from(list.getElementsByTagName("li"));
-        listUsers.map(x => x.remove());
-
-        let parsedUsers = JSON.parse(userList);
-        console.log(parsedUsers);
-        parsedUsers.forEach(element => {
-            let li = document.createElement("li");
-            li.textContent = element;
-            document.getElementById("usersList").appendChild(li); 
-        });
-    }
-});
-

@@ -30,10 +30,13 @@ namespace KnowledgeShareR.Pages
 
         public void OnGet()
         {
-            
+            if(User.Identity.IsAuthenticated)
+            {
+                this.UserName = User.Identity.Name;
+            }   
         }
 
-        public async Task<IActionResult>  OnPostAsync()
+        /*public async Task<IActionResult>  OnPostAsync()
         {
             var userName = Request.Form["UserName"];
             if(!string.IsNullOrWhiteSpace(userName))
@@ -49,6 +52,6 @@ namespace KnowledgeShareR.Pages
             }
 
             return Page();
-        }
+        }*/
     }
 }
