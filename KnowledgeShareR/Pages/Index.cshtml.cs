@@ -28,12 +28,13 @@ namespace KnowledgeShareR.Pages
             _db = dbContext;
         }
 
-        public List<Question> Questions {get; set;}
+        public Question Question {get; set;}
         public List<Answer> Answers {get; set;}
         public void OnGet()
         {
-            this.Questions = _db.Questions.Select(x => x).ToList();
-            this.Answers = _db.Questions.Where(x => x.IsActive).SelectMany(x => x.Answers).ToList();
+            var activeQuestion = _db.Questions.Include(x => x.Answers).First(x => x.IsActive);
+            Question = activeQuestion;
+            Answers = activeQuestion.Answers.ToList();
         }
     }
 }

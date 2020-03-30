@@ -18,19 +18,31 @@ namespace KnowledgeShareR.Pages
 
         public IConfiguration Configuration { get; }
 
+        private readonly KnowledgeShareDbContext _db;
+
         public string UserName { get; set; }
 
-        public VoteModel(ILogger<VoteModel> logger, IConfiguration configuration)
+        public Question Question { get; set; }
+
+        public List<Answer> Answers { get; set; }
+
+        public VoteModel(ILogger<VoteModel> logger, IConfiguration configuration, KnowledgeShareDbContext dbContext)
         {
             _logger = logger;
             Configuration = configuration;
+            _db = dbContext;
         }
 
         public void OnGet()
         {
             if(User.Identity.IsAuthenticated)
             {
-                this.UserName = User.Identity.Name;
+                var userName = User.Identity.Name;
+                var activeQuestion = _db.Questions.Include(x => x.Answers).First(x => x.IsActive);
+
+                UserName = userName;
+                Question = activeQuestion;
+                Answers = activeQuestion.Answers.ToList();
             }   
         }
     }

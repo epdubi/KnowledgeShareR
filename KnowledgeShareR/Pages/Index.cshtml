@@ -2,7 +2,7 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
-    var question = Model.Questions.FirstOrDefault();
+    var question = Model.Question;
     var answers = Model.Answers;
 }
 @if (User.Identity.IsAuthenticated)

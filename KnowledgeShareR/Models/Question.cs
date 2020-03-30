@@ -7,6 +7,6 @@ namespace KnowledgeShareR.Models
         public int QuestionId { get; set; }
         public string Text { get; set; }
         public bool IsActive { get; set; }
-        public List<Answer> Answers { get; set; }
+        public ICollection<Answer> Answers { get; set; }
     }
 }
