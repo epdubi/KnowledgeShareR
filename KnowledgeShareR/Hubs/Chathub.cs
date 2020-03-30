@@ -16,35 +16,35 @@ namespace KnowledgeShareR.Hubs
     public class ChatHub : Hub
     {
         public IConfiguration Configuration { get; }
-        
-        public ChatHub(IConfiguration configuration)
+
+        private readonly KnowledgeShareDbContext _db;
+
+        public ChatHub(IConfiguration configuration, KnowledgeShareDbContext dbContext)
         {
             Configuration = configuration;
+            _db = dbContext;
         }
+
         public override async Task OnConnectedAsync()
         {
             string username = Context.User.Identity.Name;
 
-            var optionsBuilder = new DbContextOptionsBuilder<KnowledgeShareDbContext>();
-                optionsBuilder.UseSqlServer(Configuration.GetConnectionString("KnowledgeShareDbContext"));
-            var context = new KnowledgeShareDbContext(optionsBuilder.Options);
-
-            var isConnected = context.ConnectedUsers.Any(x => x.UserName == username);
+            var isConnected = _db.ConnectedUsers.Any(x => x.UserName == username);
 
             if (!isConnected)
             {
-                await context.ConnectedUsers.AddAsync(new Models.ConnectedUser { ConnectionId = Context.ConnectionId, UserName = username });
-                await context.SaveChangesAsync();
+                await _db.ConnectedUsers.AddAsync(new Models.ConnectedUser { ConnectionId = Context.ConnectionId, UserName = username });
+                await _db.SaveChangesAsync();
             }
             else
             {
-                var currentUser = await context.ConnectedUsers.SingleAsync(x => x.UserName == username);
+                var currentUser = await _db.ConnectedUsers.SingleAsync(x => x.UserName == username);
                 currentUser.ConnectionId = Context.ConnectionId;
-                context.ConnectedUsers.Update(currentUser);
-                await context.SaveChangesAsync();
+                _db.ConnectedUsers.Update(currentUser);
+                await _db.SaveChangesAsync();
             }
 
-            var allUsers = await context.ConnectedUsers.Select(x => x.UserName).ToListAsync();
+            var allUsers = await _db.ConnectedUsers.Select(x => x.UserName).ToListAsync();
 
             await Clients.All.SendAsync("OnConnectedAsync", JsonConvert.SerializeObject(allUsers));
             await base.OnConnectedAsync();
@@ -54,15 +54,11 @@ namespace KnowledgeShareR.Hubs
         {
             string username = Context.User.Identity.Name;
 
-            var optionsBuilder = new DbContextOptionsBuilder<KnowledgeShareDbContext>();
-                optionsBuilder.UseSqlServer(Configuration.GetConnectionString("KnowledgeShareDbContext"));
-            var context = new KnowledgeShareDbContext(optionsBuilder.Options);
+            var connectedUser = await _db.ConnectedUsers.Where(x => x.UserName == username).ToListAsync();
+            _db.ConnectedUsers.RemoveRange(connectedUser);
+            await _db.SaveChangesAsync();
 
-            var connectedUser = await context.ConnectedUsers.Where(x => x.UserName == username).ToListAsync();
-            context.ConnectedUsers.RemoveRange(connectedUser);
-            await context.SaveChangesAsync();
-
-            var allUsers = await context.ConnectedUsers.Select(x => x.UserName).ToListAsync();
+            var allUsers = await _db.ConnectedUsers.Select(x => x.UserName).ToListAsync();
 
             await Clients.All.SendAsync("OnDisconnectedAsync", JsonConvert.SerializeObject(allUsers));
             await base.OnDisconnectedAsync(exception);

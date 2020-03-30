@@ -2,6 +2,7 @@ using KnowledgeShareR.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace KnowledgeShareR.Data
 {
@@ -11,8 +12,9 @@ namespace KnowledgeShareR.Data
         public DbSet<Answer> Answers { get; set; }
         public DbSet<ConnectedUser> ConnectedUsers { get; set; }
         public DbSet<Vote> Votes { get; set; }
-        public KnowledgeShareDbContext (DbContextOptions<KnowledgeShareDbContext> options)
-            : base(options)
+
+        public KnowledgeShareDbContext ()
+            : base()
         {
         }
 

@@ -26,8 +26,6 @@ namespace KnowledgeShareR.Pages
             Configuration = configuration;
         }
 
-         
-
         public void OnGet()
         {
             if(User.Identity.IsAuthenticated)
@@ -35,23 +33,5 @@ namespace KnowledgeShareR.Pages
                 this.UserName = User.Identity.Name;
             }   
         }
-
-        /*public async Task<IActionResult>  OnPostAsync()
-        {
-            var userName = Request.Form["UserName"];
-            if(!string.IsNullOrWhiteSpace(userName))
-            {
-                this.UserName = userName;
-
-                var optionsBuilder = new DbContextOptionsBuilder<KnowledgeShareDbContext>();
-                optionsBuilder.UseSqlServer(Configuration.GetConnectionString("KnowledgeShareDbContext"));
-                
-                var context = new KnowledgeShareDbContext(optionsBuilder.Options);
-                await context.ConnectedUsers.AddAsync(new Models.ConnectedUser { UserName = userName });
-                await context.SaveChangesAsync();
-            }
-
-            return Page();
-        }*/
     }
 }
