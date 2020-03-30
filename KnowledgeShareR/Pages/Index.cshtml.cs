@@ -18,24 +18,22 @@ namespace KnowledgeShareR.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         public IConfiguration Configuration { get; }
-        public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration)
+
+        private readonly KnowledgeShareDbContext _db;
+
+        public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration, KnowledgeShareDbContext dbContext)
         {
             _logger = logger;
             Configuration = configuration;
+            _db = dbContext;
         }
 
         public List<Question> Questions {get; set;}
         public List<Answer> Answers {get; set;}
         public void OnGet()
         {
-            var optionsBuilder = new DbContextOptionsBuilder<KnowledgeShareDbContext>();
-            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("KnowledgeShareDbContext"));
-
-            using(var context = new KnowledgeShareDbContext(optionsBuilder.Options))
-            {
-                this.Questions = context.Questions.Select(x => x).ToList();
-                this.Answers = context.Questions.Where(x => x.QuestionId == 1).SelectMany(x => x.Answers).ToList();
-            }
+            this.Questions = _db.Questions.Select(x => x).ToList();
+            this.Answers = _db.Questions.Where(x => x.IsActive).SelectMany(x => x.Answers).ToList();
         }
     }
 }
