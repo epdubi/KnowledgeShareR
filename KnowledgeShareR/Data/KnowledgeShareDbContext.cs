@@ -13,8 +13,8 @@ namespace KnowledgeShareR.Data
         public DbSet<ConnectedUser> ConnectedUsers { get; set; }
         public DbSet<Vote> Votes { get; set; }
 
-        public KnowledgeShareDbContext ()
-            : base()
+        public KnowledgeShareDbContext (DbContextOptions<KnowledgeShareDbContext> options)
+            : base(options)
         {
         }
 
