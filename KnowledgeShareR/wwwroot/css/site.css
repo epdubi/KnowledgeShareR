@@ -71,6 +71,22 @@ body {
 }
 
 /* Home Page Styles */
+#usersList{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  list-style: none;
+}
+#usersList li{
+  padding: 10px;
+  margin: 1px;
+  font-size: smaller;
+}
+
+#messagesList{
+  overflow: scroll;
+  height: 200px;
+}
 .user-vote{
   font-weight: 500;
 }

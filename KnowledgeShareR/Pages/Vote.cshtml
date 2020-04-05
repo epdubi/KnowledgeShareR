@@ -7,32 +7,34 @@
     var answers = Model.Answers;
 }
 
-@if (string.IsNullOrWhiteSpace(username))
-{
-    <a href="/Identity/Account/Login">Please Login</a>
-}
-else
-{
-    <h1>Welcome, <span id="username">@username</span></h1>
-    <hr />
-    <div id="question-options" class="row">
-        <div class="form-group col-12">
-            <h2>@question.Text</h2>
-            @Html.DropDownList("active-answers",
-                    new SelectList(answers.Select(x => x.Text)),
-                    "Select Answer",
-                    new { @class = "form-control" })
-
-            <input type="button" id="castVoteBtn" class="btn btn-success" value="Cast Vote" />
-        </div>
-    </div>
-
     <div class="container">
-        <div class="row">
-            <div class="col-6">
-                <input type="button" id="countDownButton" value="CountDown" />
+        @if (string.IsNullOrWhiteSpace(username))
+        {
+            <a href="/Identity/Account/Login">Please Login</a>
+        }
+        else
+        {
+            <h1>Welcome, <span id="username">@username</span></h1>
+            <hr />
+            <div id="question-options" class="row">
+                <div class="form-group col-12">
+                    <h2>@question.Text</h2>
+                    @Html.DropDownList("active-answers",
+                            new SelectList(answers.Select(x => x.Text)),
+                            "Select Answer",
+                            new { @class = "form-control" })
+
+                    <input type="button" id="castVoteBtn" class="btn btn-success" value="Cast Vote" />
+                </div>
             </div>
-        </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <input type="button" id="countDownButton" value="CountDown" />
+                    </div>
+                </div>
+            </div>
+        }
     </div>
-}
 

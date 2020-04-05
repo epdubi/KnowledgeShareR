@@ -8,17 +8,6 @@
 @if (User.Identity.IsAuthenticated)
 {
     <div class="row">
-        <div class="col-12">
-            <h2>@question.Text</h2>
-            <ul>
-                @foreach (var item in answers)
-                {
-                    <li>@item.Text</li>
-                }
-            </ul>
-        </div>
-    </div>
-    <div class="row">
         <div class="col-6">
             <h2>Connected Users</h2>
             <ul id="usersList">
@@ -29,8 +18,53 @@
             <ul id="messagesList"></ul>
         </div>
     </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <h2>@question.Text</h2>
+                <ul>
+                    @foreach (var item in answers)
+                    {
+                        <li>@item.Text</li>
+                    }
+                </ul>
+            </div>
+            <div id="chartContainer" class="col-6" style="height: 370px; width: 100%;"></div>
+        </div>
+    </div>
 }
 else
 {
-    <a href="/Identity/Account/Login">Please Login</a>
+    <div class="container">
+        <a href="/Identity/Account/Login">Please Login</a>
+    </div>
 }
+
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script>
+    var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        theme: "light2", // "light1", "light2", "dark1", "dark2"
+        title: {
+            text: "Whats your favorite color?"
+        },
+        axisY: {
+            title: "Votes"
+        },
+        data: [{
+            type: "column",
+            showInLegend: true,
+            legendMarkerColor: "grey",
+            legendText: "Users",
+            dataPoints: [
+                { y: 1, label: "Blue" },
+                { y: 2, label: "Green" },
+                { y: 3, label: "Pink" },
+                { y: 4, label: "Orange" }
+            ]
+        }]
+    });
+
+    chart.render();
+</script>
+

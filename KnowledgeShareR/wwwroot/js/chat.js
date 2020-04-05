@@ -57,6 +57,7 @@ connection.on("OnConnectedAsync", function (userList) {
     parsedUsers.forEach(element => {
         let li = document.createElement("li");
         console.log(element);
+        li.className = "badge badge-pill badge-primary";
         li.textContent = element;
         document.getElementById("usersList").appendChild(li); 
     });
@@ -75,6 +76,7 @@ connection.on("OnDisconnectedAsync", function (userList) {
     parsedUsers.forEach(element => {
         let li = document.createElement("li");
         console.log(element);
+        li.className = "badge badge-pill badge-primary";
         li.textContent = element;
         document.getElementById("usersList").appendChild(li); 
     });
@@ -85,7 +87,16 @@ connection.on("ReceiveUserVote", function (user, message) {
     let encodedMsg = "<span class='user-vote'>" + user + "</span>" + ": " + msg;
     let li = document.createElement("li");
     li.innerHTML = encodedMsg;
-    document.getElementById("messagesList").appendChild(li);
+
+    const messageList = document.getElementById("messagesList");
+    if(messageList.getElementsByTagName("li")[0])
+    {
+        messageList.insertBefore(li, messageList.getElementsByTagName("li")[0]);
+    }
+    else
+    {
+        messageList.appendChild(li);
+    }
 });
 
 connection.on("CountDownReceived", function (message) {
