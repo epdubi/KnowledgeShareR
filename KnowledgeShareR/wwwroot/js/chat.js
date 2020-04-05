@@ -2,18 +2,28 @@
 
 const connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
-const sendBtn = document.getElementById("sendButton");
+const castVoteBtn = document.getElementById("castVoteBtn");
 const countDownBtn = document.getElementById("countDownButton");
 
-if(sendBtn != undefined && countDownBtn != undefined)
+if(castVoteBtn != undefined && countDownBtn != undefined)
 {
-    sendBtn.addEventListener("click", function (event) {
+    castVoteBtn.addEventListener("click", function (event) {
         const user = document.getElementById("username").innerText;
-        const message = document.getElementById("messageInput").value;
+        const answerSelectList = document.getElementById("active-answers");
+        const selectedAnswer = answerSelectList[answerSelectList.selectedIndex].value;
         console.log(user);
-        connection.invoke("SendMessage", user, message).catch(function (err) {
-            return console.error(err.toString());
-        });
+        console.log(selectedAnswer);
+
+        if(selectedAnswer)
+        {
+            connection.invoke("SendUserVote", user, selectedAnswer).catch(function (err) {
+                return console.error(err.toString());
+            });
+        }
+        else
+        {
+            alert("Please select a valid answer");
+        }
     
         event.preventDefault();
     });
@@ -70,11 +80,11 @@ connection.on("OnDisconnectedAsync", function (userList) {
     });
 });
 
-connection.on("ReceiveMessage", function (user, message) {
+connection.on("ReceiveUserVote", function (user, message) {
     let msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    let encodedMsg = user + " says " + msg;
+    let encodedMsg = "<span class='user-vote'>" + user + "</span>" + ": " + msg;
     let li = document.createElement("li");
-    li.textContent = encodedMsg;
+    li.innerHTML = encodedMsg;
     document.getElementById("messagesList").appendChild(li);
 });
 

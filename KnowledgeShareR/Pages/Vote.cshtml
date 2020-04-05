@@ -14,28 +14,21 @@
 else
 {
     <h1>Welcome, <span id="username">@username</span></h1>
-
-    <div class="row">
-        <div class="col-12">
+    <hr />
+    <div id="question-options" class="row">
+        <div class="form-group col-12">
             <h2>@question.Text</h2>
-            @Html.DropDownList("Thing",
+            @Html.DropDownList("active-answers",
                     new SelectList(answers.Select(x => x.Text)),
                     "Select Answer",
                     new { @class = "form-control" })
+
+            <input type="button" id="castVoteBtn" class="btn btn-success" value="Cast Vote" />
         </div>
     </div>
 
     <div class="container">
-        <div class="row">&nbsp;</div>
         <div class="row">
-            <div class="col-2">Answer</div>
-            <div class="col-4"><input type="text" id="messageInput" /></div>
-        </div>
-        <div class="row">&nbsp;</div>
-        <div class="row">
-            <div class="col-6">
-                <input type="button" id="sendButton" value="Send Message" />
-            </div>
             <div class="col-6">
                 <input type="button" id="countDownButton" value="CountDown" />
             </div>
