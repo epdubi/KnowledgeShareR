@@ -4,6 +4,7 @@
     ViewData["Title"] = "Home page";
     var question = Model.Question;
     var answers = Model.Answers;
+    var answerArr = answers.Select(x => x.Text).ToArray();
 }
 @if (User.Identity.IsAuthenticated)
 {
@@ -42,11 +43,17 @@ else
 
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script>
+    var chartTitle = "@Html.Raw(question.Text)";
+    var answers = @Html.Raw(Json.Serialize(answerArr));
+
+    var initDataPoints = [];
+    answers.map(x => initDataPoints.push({ label : x }));
+
     var chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
         theme: "light2", // "light1", "light2", "dark1", "dark2"
         title: {
-            text: "Whats your favorite color?"
+            text: chartTitle
         },
         axisY: {
             title: "Votes"
@@ -56,12 +63,7 @@ else
             showInLegend: true,
             legendMarkerColor: "grey",
             legendText: "Users",
-            dataPoints: [
-                { y: 1, label: "Blue" },
-                { y: 2, label: "Green" },
-                { y: 3, label: "Pink" },
-                { y: 4, label: "Orange" }
-            ]
+            dataPoints: initDataPoints
         }]
     });
 
