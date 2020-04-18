@@ -32,6 +32,26 @@ namespace KnowledgeShareR
                 {
                     var context = services.GetRequiredService<KnowledgeShareDbContext>();
                     context.Database.EnsureCreated();
+
+                    var isQuestionTableEmpty = context.Questions.Any();
+                    var isAnswerTableEmpty = context.Answers.Any();
+
+                    if (!isQuestionTableEmpty)
+                    {
+                        context.Questions.Add(new Models.Question { Text = "What is your favorite color?", IsActive = true });
+                        context.SaveChanges();
+                    }
+
+                    if (!isAnswerTableEmpty)
+                    {
+                        var firstQuestion = context.Questions.First();
+                        context.Answers.Add(new Models.Answer { QuestionId = firstQuestion.QuestionId, Text = "Blue", IsCorrect = false });
+                        context.Answers.Add(new Models.Answer { QuestionId = firstQuestion.QuestionId, Text = "Green", IsCorrect = true });
+                        context.Answers.Add(new Models.Answer { QuestionId = firstQuestion.QuestionId, Text = "Pink", IsCorrect = false });
+                        context.Answers.Add(new Models.Answer { QuestionId = firstQuestion.QuestionId, Text = "Orange", IsCorrect = false });
+                        context.SaveChanges();
+                    }
+                    
                 }
                 catch (Exception ex)
                 {
