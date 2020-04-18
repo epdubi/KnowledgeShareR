@@ -45,10 +45,7 @@ connection
   });
 
 connection.on("OnConnectedAsync", function (userList) {
-  //Clear User List
-  let list = document.getElementById("usersList");
-  let listUsers = Array.from(list.getElementsByTagName("li"));
-  listUsers.map((x) => x.remove());
+  clearUserList();
 
   let parsedUsers = JSON.parse(userList);
   parsedUsers.forEach((element) => {
@@ -60,10 +57,7 @@ connection.on("OnConnectedAsync", function (userList) {
 });
 
 connection.on("OnDisconnectedAsync", function (userList) {
-  //Clear User List
-  let list = document.getElementById("usersList");
-  let listUsers = Array.from(list.getElementsByTagName("li"));
-  listUsers.map((x) => x.remove());
+  clearUserList();
 
   let parsedUsers = JSON.parse(userList);
   parsedUsers.forEach((element) => {
@@ -111,3 +105,9 @@ connection.on("CountDownReceived", function (message) {
   li.textContent = message;
   document.getElementById("messagesList").appendChild(li);
 });
+
+function clearUserList() {
+  let list = document.getElementById("usersList");
+  let listUsers = Array.from(list.getElementsByTagName("li"));
+  listUsers.map((x) => x.remove());
+}
