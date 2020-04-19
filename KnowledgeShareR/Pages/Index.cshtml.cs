@@ -30,11 +30,20 @@ namespace KnowledgeShareR.Pages
 
         public Question Question {get; set;}
         public List<Answer> Answers {get; set;}
-        public void OnGet()
+        public IActionResult OnGet()
         {
-            var activeQuestion = _db.Questions.Include(x => x.Answers).First(x => x.IsActive);
-            Question = activeQuestion;
-            Answers = activeQuestion.Answers.ToList();
+            if (this.User.Identity.IsAuthenticated)
+            {
+                var activeQuestion = _db.Questions.Include(x => x.Answers).First(x => x.IsActive);
+                Question = activeQuestion;
+                Answers = activeQuestion.Answers.ToList();
+                return Page();
+            }
+            else
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
         }
     }
 }
