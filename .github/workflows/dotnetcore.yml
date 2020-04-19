@@ -27,4 +27,3 @@ jobs:
         with:
           app-name: KnowledgeShareR
           publish-profile: ${{ secrets.AZURE_CREDENTIALS }}
-          package: "./dotnetcorewebapp"
