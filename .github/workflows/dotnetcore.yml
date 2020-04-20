@@ -21,15 +21,7 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: |
-          dotnet build --configuration Release --no-restore
-          dotnet publish -c Release
+        run: dotnet build --configuration Release --no-restore
 
       - name: Test
         run: dotnet test --no-restore --verbosity normal
-
-      - name: Run Azure webapp deploy action using publish profile credentials
-        uses: azure/webapps-deploy@v1
-        with:
-          app-name: KnowledgeShareR
-          publish-profile: ${{ secrets.AZURE_CREDENTIALS }}
