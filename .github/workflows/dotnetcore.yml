@@ -23,7 +23,7 @@ jobs:
       - name: Build
         run: |
           dotnet build --configuration Release --no-restore
-          dotnet publish -c Release -o './deploy'
+          dotnet publish -c Release
 
       - name: Test
         run: dotnet test --no-restore --verbosity normal
@@ -33,4 +33,3 @@ jobs:
         with:
           app-name: KnowledgeShareR
           publish-profile: ${{ secrets.AZURE_CREDENTIALS }}
-          package: "./deploy"
