@@ -8,28 +8,29 @@
 }
 @if (User.Identity.IsAuthenticated)
 {
-    <div class="row">
-        <div class="col-6">
-            <h2>Connected Users</h2>
-            <ul id="usersList">
-            </ul>
-        </div>
-        <div class="col-6">
-            <h2>User Votes</h2>
-            <ul id="messagesList"></ul>
-        </div>
+    <div class="user-list">
+        <h2>Connected Users</h2>
+        <ul id="usersList">
+        </ul>
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-6">
+            <div class="question-answer col-12">
                 <h2>@question.Text</h2>
-                <ul>
+                <ul class="list-group">
                     @foreach (var item in answers)
                     {
-                        <li>@item.Text</li>
+                        <li class="list-group-item">@item.Text</li>
                     }
                 </ul>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <h2>User Votes</h2>
+                <ul id="messagesList"></ul>
+            </div>
+
             <div id="chartContainer" class="col-6" style="height: 370px; width: 100%;"></div>
         </div>
     </div>

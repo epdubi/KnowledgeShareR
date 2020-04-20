@@ -72,11 +72,26 @@ body {
 }
 
 /* Home Page Styles */
+@media (min-width: 1500px) {
+    .user-list {
+        position: absolute;
+        max-width: 300px;
+    }
+}
+.question-answer {
+    text-align: center;
+}
+.question-answer ul {
+    list-style: none;
+}
+.question-answer li {
+    background-color: aquamarine;
+}
 #usersList {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  list-style: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    list-style: none;
 }
 #usersList li {
   padding: 10px;
