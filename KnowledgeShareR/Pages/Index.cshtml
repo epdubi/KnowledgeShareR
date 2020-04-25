@@ -8,12 +8,29 @@
 }
 @if (User.Identity.IsAuthenticated)
 {
-    <div class="user-list">
-        <h2>Connected Users</h2>
-        <ul id="usersList">
-        </ul>
-    </div>
     <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="accordion" id="users-accordion">
+                    <div class="card">
+                        <div class="card-header" id="card-heading">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#userslist-collapse" aria-expanded="true" aria-controls="userslist-collapse">
+                                    Connected Users
+                                    <span id="user-count"></span>
+                                </button>
+                            </h2>
+                        </div>
+
+                        <div id="userslist-collapse" class="collapse show" aria-labelledby="card-heading" data-parent="#users-accordion">
+                            <div class="card-body">
+                                <ul id="usersList"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="question-answer col-12">
                 <h2>@question.Text</h2>
