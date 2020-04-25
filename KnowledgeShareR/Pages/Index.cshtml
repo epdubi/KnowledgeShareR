@@ -8,7 +8,6 @@
 }
 @if (User.Identity.IsAuthenticated)
 {
-    <div class="container">
         <div class="row">
             <div class="col-12">
                 <div class="accordion" id="users-accordion">
@@ -50,13 +49,10 @@
 
             <div id="chartContainer" class="col-6" style="height: 370px; width: 100%;"></div>
         </div>
-    </div>
 }
 else
 {
-    <div class="container">
-        <a href="/Identity/Account/Login">Please Login</a>
-    </div>
+    <a href="/Identity/Account/Login">Please Login</a>
 }
 
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
