@@ -6,6 +6,7 @@ const connection = new signalR.HubConnectionBuilder()
 
 const castVoteBtn = document.getElementById("castVoteBtn");
 const countDownBtn = document.getElementById("countDownButton");
+const userCountSpan = document.getElementById("user-count");
 
 if (castVoteBtn != undefined && countDownBtn != undefined) {
   castVoteBtn.addEventListener("click", function (event) {
@@ -48,24 +49,16 @@ connection.on("OnConnectedAsync", function (userList) {
   clearUserList();
 
   let parsedUsers = JSON.parse(userList);
-  parsedUsers.forEach((element) => {
-    let li = document.createElement("li");
-    li.className = "badge badge-pill badge-primary";
-    li.textContent = element;
-    document.getElementById("usersList").appendChild(li);
-  });
+  setUserCount(parsedUsers.length);
+  buildUserList(parsedUsers);
 });
 
 connection.on("OnDisconnectedAsync", function (userList) {
   clearUserList();
 
   let parsedUsers = JSON.parse(userList);
-  parsedUsers.forEach((element) => {
-    let li = document.createElement("li");
-    li.className = "badge badge-pill badge-primary";
-    li.textContent = element;
-    document.getElementById("usersList").appendChild(li);
-  });
+  setUserCount(parsedUsers.length);
+  buildUserList(parsedUsers);
 });
 
 connection.on("ReceiveUserVote", function (user, message) {
@@ -110,4 +103,19 @@ function clearUserList() {
   let list = document.getElementById("usersList");
   let listUsers = Array.from(list.getElementsByTagName("li"));
   listUsers.map((x) => x.remove());
+}
+
+function buildUserList(parsedUsers) {
+  parsedUsers.forEach((element) => {
+    let li = document.createElement("li");
+    li.className = "badge badge-pill badge-primary";
+    li.textContent = element;
+    document.getElementById("usersList").appendChild(li);
+  });
+}
+
+function setUserCount(userCount) {
+  console.log("setUserCount Hit");
+  let userCountText = "(" + userCount + ")";
+  userCountSpan.innerText = userCountText;
 }
