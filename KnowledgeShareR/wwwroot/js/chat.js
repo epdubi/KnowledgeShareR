@@ -7,6 +7,7 @@ const connection = new signalR.HubConnectionBuilder()
 const castVoteBtn = document.getElementById("castVoteBtn");
 const countDownBtn = document.getElementById("countDownButton");
 const userCountSpan = document.getElementById("user-count");
+const nextQuestionBtn = document.getElementById("next-question");
 
 if (castVoteBtn != undefined && countDownBtn != undefined) {
   castVoteBtn.addEventListener("click", function (event) {
@@ -33,6 +34,17 @@ if (castVoteBtn != undefined && countDownBtn != undefined) {
     });
 
     event.preventDefault();
+  });
+}
+
+if (nextQuestionBtn != undefined) {
+  nextQuestionBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    console.log(event.target);
+    connection.invoke("NextQuestion").catch(function (err) {
+      return alert(err.toString());
+    });
   });
 }
 
@@ -91,6 +103,10 @@ connection.on("ReceiveUserVote", function (user, message) {
     chart.options.data[0].dataPoints[targetChartIndex].y = 1;
   }
   chart.render();
+});
+
+connection.on("NextQuestionRecieved", function (message) {
+  console.log(message);
 });
 
 connection.on("CountDownReceived", function (message) {

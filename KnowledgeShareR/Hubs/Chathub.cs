@@ -69,6 +69,21 @@ namespace KnowledgeShareR.Hubs
             await Clients.All.SendAsync("ReceiveUserVote", user, message);
         }
 
+        public async Task NextQuestion()
+        {
+            var allQuestions = await _db.Questions.Select(x => x).ToListAsync();
+            var activeQuestion = allQuestions.FirstOrDefault(x => x.IsActive == true);
+            var nextQuestion = _db.Questions.Where(x => x.QuestionId > activeQuestion.QuestionId).Any()
+                                ? _db.Questions.Where(x => x.QuestionId > activeQuestion.QuestionId).OrderBy(x => x.QuestionId).FirstOrDefault()
+                                : allQuestions.FirstOrDefault();
+
+            activeQuestion.IsActive = false;
+            nextQuestion.IsActive = true;
+
+            await _db.SaveChangesAsync();
+            await Clients.All.SendAsync("NextQuestionRecieved", "Next Question is live!");
+        }
+
         public async Task CountDown()
         {
             var numbers = Enumerable.Range(0, 10).Select(x => x);
