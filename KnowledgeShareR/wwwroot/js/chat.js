@@ -8,6 +8,8 @@ const castVoteBtn = document.getElementById("castVoteBtn");
 const countDownBtn = document.getElementById("countDownButton");
 const userCountSpan = document.getElementById("user-count");
 const nextQuestionBtn = document.getElementById("next-question");
+const questionTitle = document.getElementById("question");
+const answerList = document.getElementById("answer-list");
 
 if (castVoteBtn != undefined && countDownBtn != undefined) {
   castVoteBtn.addEventListener("click", function (event) {
@@ -105,13 +107,43 @@ connection.on("ReceiveUserVote", function (user, message) {
   chart.render();
 });
 
-connection.on("NextQuestionRecieved", function (message) {
-  console.log(message);
+connection.on("NextQuestionReceived", function (question, answers) {
+  if (question && answers) {
+    questionTitle.innerHTML = question;
+    clearAnswerList();
+    buildAnswersList(answers);
+
+    if (chart) {
+      var newDataPoints = [];
+      answers.map((answer, i) => newDataPoints.push({ label: answer, x: i }));
+
+      chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        theme: "light2",
+        title: {
+          text: question,
+        },
+        axisY: {
+          title: "Votes",
+        },
+        data: [
+          {
+            type: "column",
+            showInLegend: true,
+            legendMarkerColor: "grey",
+            legendText: "Users",
+            dataPoints: newDataPoints,
+          },
+        ],
+      });
+      chart.render();
+    }
+  }
 });
 
 connection.on("CountDownReceived", function (message) {
   let li = document.createElement("li");
-  li.textContent = message;
+  li.innerText = message;
   document.getElementById("messagesList").appendChild(li);
 });
 
@@ -125,7 +157,7 @@ function buildUserList(parsedUsers) {
   parsedUsers.forEach((element) => {
     let li = document.createElement("li");
     li.className = "badge badge-pill badge-primary";
-    li.textContent = element;
+    li.innerText = element;
     document.getElementById("usersList").appendChild(li);
   });
 }
@@ -134,4 +166,18 @@ function setUserCount(userCount) {
   console.log("setUserCount Hit");
   let userCountText = "(" + userCount + ")";
   userCountSpan.innerText = userCountText;
+}
+
+function clearAnswerList() {
+  let answerListItems = Array.from(answerList.getElementsByTagName("li"));
+  answerListItems.map((x) => x.remove());
+}
+
+function buildAnswersList(answers) {
+  answers.forEach((answer) => {
+    let li = document.createElement("li");
+    li.className = "list-group-item";
+    li.innerText = answer;
+    answerList.appendChild(li);
+  });
 }

@@ -32,8 +32,8 @@
         </div>
         <div class="row">
             <div class="question-answer col-12">
-                <h2>@question.Text</h2>
-                <ul class="list-group">
+                <h2 id="question">@question.Text</h2>
+                <ul id="answer-list" class="list-group">
                     @foreach (var item in answers)
                     {
                         <li class="list-group-item">@item.Text</li>
@@ -66,7 +66,7 @@ else
 
     var chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
-        theme: "light2", // "light1", "light2", "dark1", "dark2"
+        theme: "light2",
         title: {
             text: chartTitle
         },

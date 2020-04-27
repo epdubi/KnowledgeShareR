@@ -81,7 +81,9 @@ namespace KnowledgeShareR.Hubs
             nextQuestion.IsActive = true;
 
             await _db.SaveChangesAsync();
-            await Clients.All.SendAsync("NextQuestionRecieved", "Next Question is live!");
+
+            var newAnswers = await _db.Answers.Where(x => x.QuestionId == nextQuestion.QuestionId).ToListAsync();
+            await Clients.All.SendAsync("NextQuestionReceived", nextQuestion.Text, newAnswers.Select(x => x.Text).ToArray());
         }
 
         public async Task CountDown()
