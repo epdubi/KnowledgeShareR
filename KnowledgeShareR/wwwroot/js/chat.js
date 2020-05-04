@@ -10,6 +10,8 @@ const userCountSpan = document.getElementById("user-count");
 const nextQuestionBtn = document.getElementById("next-question");
 const questionTitle = document.getElementById("question");
 const answerList = document.getElementById("answer-list");
+const voteQuestion = document.getElementById("vote-question");
+const voteAnswers = document.getElementById("active-answers");
 
 if (castVoteBtn != undefined && countDownBtn != undefined) {
   castVoteBtn.addEventListener("click", function (event) {
@@ -43,7 +45,6 @@ if (nextQuestionBtn != undefined) {
   nextQuestionBtn.addEventListener("click", function (event) {
     event.preventDefault();
 
-    console.log(event.target);
     connection.invoke("NextQuestion").catch(function (err) {
       return alert(err.toString());
     });
@@ -80,7 +81,6 @@ connection.on("ReceiveUserVote", function (user, message) {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
-  console.log(msg);
   let encodedMsg = "<span class='user-vote'>" + user + "</span>" + ": " + msg;
   let li = document.createElement("li");
   li.innerHTML = encodedMsg;
@@ -95,7 +95,6 @@ connection.on("ReceiveUserVote", function (user, message) {
   let targetChartIndex = chart.options.data[0].dataPoints
     .map((e) => e.label)
     .indexOf(msg);
-  console.log(targetChartIndex);
 
   var yValue = chart.options.data[0].dataPoints[targetChartIndex].y;
   if (yValue) {
@@ -109,6 +108,12 @@ connection.on("ReceiveUserVote", function (user, message) {
 
 connection.on("NextQuestionReceived", function (question, answers) {
   if (question && answers) {
+    if (voteQuestion && voteAnswers) {
+      voteQuestion.innerHTML = question;
+      clearVoteAnswers();
+      buildVoteAnswers(answers);
+    }
+
     questionTitle.innerHTML = question;
     clearAnswerList();
     buildAnswersList(answers);
@@ -163,7 +168,6 @@ function buildUserList(parsedUsers) {
 }
 
 function setUserCount(userCount) {
-  console.log("setUserCount Hit");
   let userCountText = "(" + userCount + ")";
   userCountSpan.innerText = userCountText;
 }
@@ -179,5 +183,23 @@ function buildAnswersList(answers) {
     li.className = "list-group-item";
     li.innerText = answer;
     answerList.appendChild(li);
+  });
+}
+
+function clearVoteAnswers() {
+  document
+    .querySelectorAll("#active-answers option")
+    .forEach((option) => option.remove());
+}
+
+function buildVoteAnswers(answers) {
+  let titleOption = document.createElement("option");
+  titleOption.innerText = "Select Answer";
+  voteAnswers.appendChild(titleOption);
+
+  answers.forEach((answer) => {
+    let option = document.createElement("option");
+    option.innerText = answer;
+    voteAnswers.appendChild(option);
   });
 }
