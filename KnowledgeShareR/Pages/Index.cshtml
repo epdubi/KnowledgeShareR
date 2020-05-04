@@ -3,25 +3,29 @@
 @{
     ViewData["Title"] = "Home page";
     var question = Model.Question;
+
     var answers = Model.Answers;
-    var answerArr = answers.Select(x => x.Text).ToArray();
+    var alphabetDict = new Dictionary<int, string>() { { 0, "a. " }, { 1, "b. " }, { 2, "c. " }, { 3, "d. " }, { 4, "e. " }, { 5, "f. " } };
+    var displayAnswers = answers.Select((x, i) => alphabetDict[i] + x.Text);
+    var chartAnswers = answers.Select((x, i) => alphabetDict[i]).ToArray();
 }
-@if (User.Identity.IsAuthenticated)
-{
+    <div class="container-fluid">
+        @if (User.Identity.IsAuthenticated)
+        {
         <div class="row">
             <div class="col-12">
                 <div class="accordion" id="users-accordion">
                     <div class="card">
                         <div class="card-header" id="card-heading">
                             <h2 class="mb-0">
-                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#userslist-collapse" aria-expanded="true" aria-controls="userslist-collapse">
+                                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#userslist-collapse" aria-expanded="false" aria-controls="userslist-collapse">
                                     Connected Users
                                     <span id="user-count"></span>
                                 </button>
                             </h2>
                         </div>
 
-                        <div id="userslist-collapse" class="collapse show" aria-labelledby="card-heading" data-parent="#users-accordion">
+                        <div id="userslist-collapse" class="collapse" aria-labelledby="card-heading" data-parent="#users-accordion">
                             <div class="card-body">
                                 <ul id="usersList"></ul>
                             </div>
@@ -31,35 +35,33 @@
             </div>
         </div>
         <div class="row">
-            <div class="question-answer col-12">
-                <h2 id="question">@question.Text</h2>
-                <ul id="answer-list" class="list-group">
-                    @foreach (var item in answers)
-                    {
-                        <li class="list-group-item">@item.Text</li>
-                    }
-                </ul>
-                <button type="button" id="next-question">Next question</button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-6">
+            <div class="col-3">
                 <h2>User Votes</h2>
                 <ul id="messagesList"></ul>
             </div>
-
             <div id="chartContainer" class="col-6" style="height: 370px; width: 100%;"></div>
+            <div class="question-answer col-3">
+                <h2>Answers</h2>
+                <ul id="answer-list" class="list-group">
+                    @foreach (var item in displayAnswers)
+                    {
+                        <li class="list-group-item">@item</li>
+                    }
+                </ul>
+                <button type="button" id="next-question" class="btn btn-primary">Next question</button>
+            </div>
         </div>
-}
-else
-{
-    <a href="/Identity/Account/Login">Please Login</a>
-}
+        }
+        else
+        {
+            <a href="/Identity/Account/Login">Please Login</a>
+        }
+    </div>
 
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script>
     var chartTitle = "@Html.Raw(question.Text)";
-    var answers = @Html.Raw(Json.Serialize(answerArr));
+    var answers = @Html.Raw(Json.Serialize(chartAnswers));
 
     var initDataPoints = [];
     answers.map(x => initDataPoints.push({ label : x }));

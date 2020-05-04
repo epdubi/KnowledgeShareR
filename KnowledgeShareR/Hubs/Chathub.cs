@@ -19,6 +19,8 @@ namespace KnowledgeShareR.Hubs
 
         private readonly KnowledgeShareDbContext _db;
 
+        private readonly Dictionary<int, string> AlphabetDict = new Dictionary<int, string> { { 0, "a. " }, { 1, "b. " }, { 2, "c. " }, { 3, "d. " }, { 4, "e. " }, { 5, "f. " } };
+
         public ChatHub(IConfiguration configuration, KnowledgeShareDbContext dbContext)
         {
             Configuration = configuration;
@@ -83,7 +85,8 @@ namespace KnowledgeShareR.Hubs
             await _db.SaveChangesAsync();
 
             var newAnswers = await _db.Answers.Where(x => x.QuestionId == nextQuestion.QuestionId).ToListAsync();
-            await Clients.All.SendAsync("NextQuestionReceived", nextQuestion.Text, newAnswers.Select(x => x.Text).ToArray());
+            var displayAnswers = newAnswers.Select((x, i) => AlphabetDict[i] + x.Text).ToArray();
+            await Clients.All.SendAsync("NextQuestionReceived", nextQuestion.Text, displayAnswers);
         }
 
         public async Task CountDown()

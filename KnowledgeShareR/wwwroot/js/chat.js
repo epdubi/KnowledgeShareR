@@ -5,15 +5,13 @@ const connection = new signalR.HubConnectionBuilder()
   .build();
 
 const castVoteBtn = document.getElementById("castVoteBtn");
-const countDownBtn = document.getElementById("countDownButton");
 const userCountSpan = document.getElementById("user-count");
 const nextQuestionBtn = document.getElementById("next-question");
-const questionTitle = document.getElementById("question");
 const answerList = document.getElementById("answer-list");
 const voteQuestion = document.getElementById("vote-question");
 const voteAnswers = document.getElementById("active-answers");
 
-if (castVoteBtn != undefined && countDownBtn != undefined) {
+if (castVoteBtn != undefined) {
   castVoteBtn.addEventListener("click", function (event) {
     let user = document.getElementById("username").innerText;
     let answerSelectList = document.getElementById("active-answers");
@@ -28,14 +26,6 @@ if (castVoteBtn != undefined && countDownBtn != undefined) {
     } else {
       alert("Please select a valid answer");
     }
-
-    event.preventDefault();
-  });
-
-  countDownBtn.addEventListener("click", function (event) {
-    connection.invoke("CountDown").catch(function (err) {
-      return alert(err.toString());
-    });
 
     event.preventDefault();
   });
@@ -92,9 +82,10 @@ connection.on("ReceiveUserVote", function (user, message) {
     messageList.appendChild(li);
   }
 
+  let chatAnswer = msg.substring(0, msg.indexOf(".") + 2);
   let targetChartIndex = chart.options.data[0].dataPoints
     .map((e) => e.label)
-    .indexOf(msg);
+    .indexOf(chatAnswer);
 
   var yValue = chart.options.data[0].dataPoints[targetChartIndex].y;
   if (yValue) {
@@ -114,13 +105,17 @@ connection.on("NextQuestionReceived", function (question, answers) {
       buildVoteAnswers(answers);
     }
 
-    questionTitle.innerHTML = question;
     clearAnswerList();
     buildAnswersList(answers);
 
     if (chart) {
       var newDataPoints = [];
-      answers.map((answer, i) => newDataPoints.push({ label: answer, x: i }));
+      answers.map((answer, i) =>
+        newDataPoints.push({
+          label: answer.substring(0, answer.indexOf(".") + 2),
+          x: i,
+        })
+      );
 
       chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
@@ -144,12 +139,6 @@ connection.on("NextQuestionReceived", function (question, answers) {
       chart.render();
     }
   }
-});
-
-connection.on("CountDownReceived", function (message) {
-  let li = document.createElement("li");
-  li.innerText = message;
-  document.getElementById("messagesList").appendChild(li);
 });
 
 function clearUserList() {
