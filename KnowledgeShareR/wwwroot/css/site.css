@@ -74,6 +74,7 @@ body {
 /* Home Page Styles */
 #users-accordion {
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  margin-bottom: 3em;
 }
 #usersList {
   display: flex;
@@ -102,15 +103,6 @@ body {
 }
 
 /* Vote Page Styles */
-#username {
-  color: deepskyblue;
-}
-
-#question-options #active-answers {
-  width: 50%;
-  display: inline-block;
-}
-
 #question-options #castVoteBtn {
   margin-bottom: 5px;
 }

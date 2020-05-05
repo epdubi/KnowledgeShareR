@@ -16,17 +16,23 @@
         }
         else
         {
-            <h1>Welcome, <span id="username">@username</span></h1>
-            <hr />
+        <div class="row">
+            <div class="col-12">
+                <h2>Welcome, <span id="username" class="badge badge-dark">@username</span> please case your vote below</h2>
+            </div>
+        </div>
+        <hr />
             <div id="question-options" class="row">
                 <div class="form-group col-12">
                     <h2 id="vote-question">@question.Text</h2>
-                    @Html.DropDownList("active-answers",
-                            new SelectList(answerDisplay),
-                            "Select Answer",
-                            new { @class = "form-control" })
+                    <div class="d-flex">
+                        @Html.DropDownList("active-answers",
+                                new SelectList(answerDisplay),
+                                "Select Answer",
+                                new { @class = "form-control" })
 
-                    <input type="button" id="castVoteBtn" class="btn btn-success" value="Cast Vote" />
+                        <input type="button" id="castVoteBtn" class="btn btn-success" value="Cast Vote" />
+                    </div>
                 </div>
             </div>
         }
