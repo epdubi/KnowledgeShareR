@@ -6,7 +6,7 @@
 
     var answers = Model.Answers;
     var alphabetDict = new Dictionary<int, string>() { { 0, "a. " }, { 1, "b. " }, { 2, "c. " }, { 3, "d. " }, { 4, "e. " }, { 5, "f. " } };
-    var displayAnswers = answers.Select((x, i) => alphabetDict[i] + x.Text);
+    var displayAnswers = answers.Select((x, i) => new { answer = alphabetDict[i] + x.Text, isCorrect = x.IsCorrect });
     var chartAnswers = answers.Select((x, i) => alphabetDict[i]).ToArray();
 }
     <div class="container-fluid">
@@ -45,10 +45,18 @@
                 <ul id="answer-list" class="list-group">
                     @foreach (var item in displayAnswers)
                     {
-                        <li class="list-group-item">@item</li>
+                        if (item.isCorrect)
+                        {
+                            <li class="list-group-item correct-answer">@item.answer</li>
+                        }
+                        else 
+                        {
+                            <li class="list-group-item">@item.answer</li>
+                        }
                     }
                 </ul>
-                <button type="button" id="next-question" class="btn btn-primary">Next question</button>
+                <button type="button" id="reveal-answer" class="btn btn-primary">Reveal answer</button>
+                <button type="button" id="next-question" class="btn btn-secondary">Next question</button>
             </div>
         </div>
         }

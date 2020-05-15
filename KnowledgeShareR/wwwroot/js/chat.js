@@ -6,6 +6,7 @@ const connection = new signalR.HubConnectionBuilder()
 
 const castVoteBtn = document.getElementById("castVoteBtn");
 const userCountSpan = document.getElementById("user-count");
+const revealAnswerBtn = document.getElementById("reveal-answer");
 const nextQuestionBtn = document.getElementById("next-question");
 const answerList = document.getElementById("answer-list");
 const voteQuestion = document.getElementById("vote-question");
@@ -28,6 +29,17 @@ if (castVoteBtn != undefined) {
     }
 
     event.preventDefault();
+  });
+}
+
+if (revealAnswerBtn != undefined) {
+  revealAnswerBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    let correctAnswerLi = document.querySelector(
+      "li.list-group-item.correct-answer"
+    );
+    correctAnswerLi.classList.add("reveal");
   });
 }
 
@@ -112,7 +124,7 @@ connection.on("NextQuestionReceived", function (question, answers) {
       var newDataPoints = [];
       answers.map((answer, i) =>
         newDataPoints.push({
-          label: answer.substring(0, answer.indexOf(".") + 2),
+          label: answer.answer.substring(0, answer.answer.indexOf(".") + 2),
           x: i,
         })
       );
@@ -169,8 +181,10 @@ function clearAnswerList() {
 function buildAnswersList(answers) {
   answers.forEach((answer) => {
     let li = document.createElement("li");
-    li.className = "list-group-item";
-    li.innerText = answer;
+    li.className = answer.isCorrect
+      ? "list-group-item correct-answer"
+      : "list-group-item";
+    li.innerText = answer.answer;
     answerList.appendChild(li);
   });
 }
@@ -188,7 +202,7 @@ function buildVoteAnswers(answers) {
 
   answers.forEach((answer) => {
     let option = document.createElement("option");
-    option.innerText = answer;
+    option.innerText = answer.answer;
     voteAnswers.appendChild(option);
   });
 }

@@ -93,6 +93,11 @@ body {
 .question-answer ul {
   list-style: none;
 }
+.question-answer .list-group-item.correct-answer.reveal {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
 
 #messagesList {
   overflow: scroll;

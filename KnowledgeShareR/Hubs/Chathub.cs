@@ -85,7 +85,7 @@ namespace KnowledgeShareR.Hubs
             await _db.SaveChangesAsync();
 
             var newAnswers = await _db.Answers.Where(x => x.QuestionId == nextQuestion.QuestionId).ToListAsync();
-            var displayAnswers = newAnswers.Select((x, i) => AlphabetDict[i] + x.Text).ToArray();
+            var displayAnswers = newAnswers.Select((x, i) => new { answer = AlphabetDict[i] + x.Text, isCorrect = x.IsCorrect }).ToArray();
             await Clients.All.SendAsync("NextQuestionReceived", nextQuestion.Text, displayAnswers);
         }
 
