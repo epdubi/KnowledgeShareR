@@ -28,22 +28,25 @@ namespace KnowledgeShareR.Pages
             _db = dbContext;
         }
 
-        public Question Question {get; set;}
-        public List<Answer> Answers {get; set;}
+        public Question Question { get; set; }
+        public List<Answer> Answers { get; set; }
         public IActionResult OnGet()
         {
-            if (this.User.Identity.IsAuthenticated)
+            if (this.User.Identity.IsAuthenticated && this.User.Identity.Name == "ewagner@engagesoftware.com")
             {
                 var activeQuestion = _db.Questions.Include(x => x.Answers).First(x => x.IsActive);
                 Question = activeQuestion;
                 Answers = activeQuestion.Answers.ToList();
                 return Page();
             }
+            else if (this.User.Identity.IsAuthenticated)
+            {
+                return Redirect("/Vote");
+            }
             else
             {
                 return Redirect("/Identity/Account/Login");
             }
-
         }
     }
 }
