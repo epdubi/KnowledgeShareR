@@ -12,6 +12,7 @@ namespace KnowledgeShareR.Data
         public DbSet<Answer> Answers { get; set; }
         public DbSet<ConnectedUser> ConnectedUsers { get; set; }
         public DbSet<Vote> Votes { get; set; }
+        public DbSet<UserInfo> UserInfos { get; set; }
 
         public KnowledgeShareDbContext (DbContextOptions<KnowledgeShareDbContext> options)
             : base(options)
@@ -26,11 +27,9 @@ namespace KnowledgeShareR.Data
             .HasMany(b => b.Answers)
             .WithOne(b => b.Question);
 
-            modelBuilder.Entity<Vote>()
-            .ToTable("Votes");
-
-            modelBuilder.Entity<ConnectedUser>()
-            .ToTable("ConnectedUsers");
+            modelBuilder.Entity<Vote>().ToTable("Votes");
+            modelBuilder.Entity<ConnectedUser>().ToTable("ConnectedUsers");
+            modelBuilder.Entity<UserInfo>().ToTable("UserInfos");
         }
     }
 }

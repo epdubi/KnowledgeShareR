@@ -68,7 +68,10 @@ namespace KnowledgeShareR.Hubs
 
         public async Task SendUserVote(string user, string message)
         {
-            await Clients.All.SendAsync("ReceiveUserVote", user, message);
+            var userInfo = await _db.UserInfos.FirstOrDefaultAsync(x => x.UserName == user);
+            var userDisplay = userInfo != null ? userInfo.ProfilePicture : user;
+
+            await Clients.All.SendAsync("ReceiveUserVote", userDisplay, message);
         }
 
         public async Task NextQuestion()

@@ -9,6 +9,8 @@ using KnowledgeShareR.Models;
 using KnowledgeShareR.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace KnowledgeShareR.Pages
 {
@@ -21,6 +23,8 @@ namespace KnowledgeShareR.Pages
         private readonly KnowledgeShareDbContext _db;
 
         public string UserName { get; set; }
+
+        public string ProfilePicture { get; set; }
 
         public Question Question { get; set; }
 
@@ -38,9 +42,11 @@ namespace KnowledgeShareR.Pages
             if(User.Identity.IsAuthenticated)
             {
                 var userName = User.Identity.Name;
+                var userInfo = _db.UserInfos.FirstOrDefault(x => x.UserName == userName);
                 var activeQuestion = _db.Questions.Include(x => x.Answers).First(x => x.IsActive);
 
                 UserName = userName;
+                ProfilePicture = userInfo.ProfilePicture;
                 Question = activeQuestion;
                 Answers = activeQuestion.Answers.ToList();
             }   

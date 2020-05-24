@@ -8,6 +8,9 @@ using Microsoft.Extensions.Hosting;
 using KnowledgeShareR.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace KnowledgeShareR
 {
@@ -42,6 +45,24 @@ namespace KnowledgeShareR
                 options.ClientId = googleAuthNSection["ClientId"];
                 options.ClientSecret = googleAuthNSection["ClientSecret"];
                 options.CallbackPath = "/google-signin";
+
+                options.Scope.Add("profile");
+                options.Events.OnCreatingTicket = (context) =>
+                {
+                    var email = context.User.GetProperty("email").GetString();
+                    var picture = context.User.GetProperty("picture").GetString();
+
+                    var db = context.HttpContext.RequestServices.GetRequiredService<KnowledgeShareDbContext>();
+                    var isExistingUser = db.UserInfos.Any(x => x.UserName == email);
+
+                    if (!isExistingUser)
+                    {
+                        db.UserInfos.Add(new Models.UserInfo() { UserName = email, ProfilePicture = picture });
+                        db.SaveChanges();
+                    }
+
+                    return Task.CompletedTask;
+                };
             });
         }
 

@@ -78,12 +78,20 @@ connection.on("OnDisconnectedAsync", function (userList) {
   buildUserList(parsedUsers);
 });
 
-connection.on("ReceiveUserVote", function (user, message) {
+connection.on("ReceiveUserVote", function (profilePicture, message) {
   let msg = message
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
-  let encodedMsg = "<span class='user-vote'>" + user + "</span>" + ": " + msg;
+  let encodedMsg =
+    "<span class='user-vote'>" +
+    "<img src='" +
+    profilePicture +
+    "' />" +
+    "</span>" +
+    " " +
+    msg +
+    "<hr/>";
   let li = document.createElement("li");
   li.innerHTML = encodedMsg;
 

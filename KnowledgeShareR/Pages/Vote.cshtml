@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Vote";
     var username = Model.UserName;
+    var profilePicture = Model.ProfilePicture;
     var question = Model.Question;
     var answers = Model.Answers;
     var alphabetDict = new Dictionary<int, string>() { { 0, "a. " }, { 1, "b. " }, { 2, "c. " }, { 3, "d. " }, { 4, "e. " }, { 5, "f. " } };
@@ -18,7 +19,12 @@
         {
         <div class="row">
             <div class="col-12">
-                <h2>Welcome, <span id="username" class="badge badge-dark">@username</span> please cast your vote below</h2>
+                <div class="media">
+                    <img src="@profilePicture" class="mr-3" width="50" height="50" alt="Profile Picture">
+                    <div class="media-body">
+                        <h5 id="username" class="mt-0">@username</h5>
+                    </div>
+                </div>
             </div>
         </div>
         <hr />
