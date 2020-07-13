@@ -28,19 +28,22 @@
             </div>
         </div>
         <hr />
-            <div id="question-options" class="row">
+        <div id="question-options" class="row justify-content-center text-center">
+            <form>
                 <div class="form-group col-12">
                     <h2 id="vote-question">@question.Text</h2>
-                    <div class="d-flex">
-                        @Html.DropDownList("active-answers",
-                                new SelectList(answerDisplay),
-                                "Select Answer",
-                                new { @class = "form-control" })
-
-                        <input type="button" id="castVoteBtn" class="btn btn-success" value="Cast Vote" />
-                    </div>
+                    @Html.DropDownList("active-answers",
+                            new SelectList(answerDisplay),
+                            "Select Answer",
+                            new { @class = "form-control" })
+                    <input type="button" id="castVoteBtn" class="btn btn-success btn-lg" value="Cast Vote" />
                 </div>
-            </div>
+                <div class="alert alert-success" role="alert" hidden>
+                    <h4 class="alert-heading">Success!</h4>
+                    <p></p>
+                </div>
+            </form>
+        </div>
         }
     </div>
 

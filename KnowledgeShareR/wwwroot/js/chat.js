@@ -2,6 +2,7 @@
 
 const connection = new signalR.HubConnectionBuilder()
   .withUrl("/chatHub")
+  .configureLogging(signalR.LogLevel.Debug)
   .build();
 
 const castVoteBtn = document.getElementById("castVoteBtn");
@@ -24,6 +25,11 @@ if (castVoteBtn != undefined) {
         .catch(function (err) {
           return alert(err.toString());
         });
+
+      let successDiv = document.querySelector("#question-options .alert");
+      let successMessage = successDiv.querySelector("p");
+      successDiv.removeAttribute("hidden");
+      successMessage.innerHTML = selectedAnswer;
     } else {
       alert("Please select a valid answer");
     }
@@ -120,6 +126,11 @@ connection.on("ReceiveUserVote", function (profilePicture, message) {
 connection.on("NextQuestionReceived", function (question, answers) {
   if (question && answers) {
     if (voteQuestion && voteAnswers) {
+      let successDiv = document.querySelector("#question-options .alert");
+      let successMessage = successDiv.querySelector("p");
+      successDiv.hidden = true;
+      successMessage.innerHTML = "";
+
       voteQuestion.innerHTML = question;
       clearVoteAnswers();
       buildVoteAnswers(answers);

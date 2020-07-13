@@ -115,6 +115,6 @@ body {
 }
 
 /* Vote Page Styles */
-#question-options #castVoteBtn {
-  margin-bottom: 5px;
+#question-options #active-answers {
+  margin-bottom: 0.5em;
 }
