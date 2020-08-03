@@ -1,7 +1,7 @@
 ﻿"use strict";
 
 const connection = new signalR.HubConnectionBuilder()
-  .withUrl("/chatHub")
+  .withUrl("/knowledgeShareRHub")
   .configureLogging(signalR.LogLevel.Debug)
   .build();
 

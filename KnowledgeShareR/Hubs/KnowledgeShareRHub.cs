@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace KnowledgeShareR.Hubs
 {
     [Authorize]
-    public class ChatHub : Hub
+    public class KnowledgeShareRHub : Hub
     {
         public IConfiguration Configuration { get; }
 
@@ -21,7 +21,7 @@ namespace KnowledgeShareR.Hubs
 
         private readonly Dictionary<int, string> AlphabetDict = new Dictionary<int, string> { { 0, "a. " }, { 1, "b. " }, { 2, "c. " }, { 3, "d. " }, { 4, "e. " }, { 5, "f. " } };
 
-        public ChatHub(IConfiguration configuration, KnowledgeShareDbContext dbContext)
+        public KnowledgeShareRHub(IConfiguration configuration, KnowledgeShareDbContext dbContext)
         {
             Configuration = configuration;
             _db = dbContext;

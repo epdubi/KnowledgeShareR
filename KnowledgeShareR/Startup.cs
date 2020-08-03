@@ -91,7 +91,7 @@ namespace KnowledgeShareR
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
-                endpoints.MapHub<ChatHub>("/chatHub");
+                endpoints.MapHub<KnowledgeShareRHub>("/knowledgeShareRHub");
             });
         }
     }
