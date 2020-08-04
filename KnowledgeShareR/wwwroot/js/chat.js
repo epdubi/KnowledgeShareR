@@ -6,6 +6,7 @@ const connection = new signalR.HubConnectionBuilder()
   .build();
 
 const castVoteBtn = document.getElementById("castVoteBtn");
+const privateMesssageBtn = document.getElementById("privateMessageBtn");
 const userCountSpan = document.getElementById("user-count");
 const revealAnswerBtn = document.getElementById("reveal-answer");
 const nextQuestionBtn = document.getElementById("next-question");
@@ -35,6 +36,28 @@ if (castVoteBtn != undefined) {
     }
 
     event.preventDefault();
+  });
+}
+
+if (privateMesssageBtn != undefined) {
+  privateMesssageBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+    var usersDropdown = document.getElementById("all-users");
+    var selectedUser = usersDropdown[usersDropdown.selectedIndex].value;
+
+    var message = document.getElementById("message").value;
+
+    if (selectedUser && message) {
+      connection
+        .invoke("SendPrivateMessage", selectedUser, message)
+        .catch(function (err) {
+          return alert(err.toString());
+        });
+    } else {
+      alert("Please select user and send message");
+    }
+    console.log(selectedUser);
+    console.log(message);
   });
 }
 
@@ -121,6 +144,10 @@ connection.on("ReceiveUserVote", function (profilePicture, message) {
     chart.options.data[0].dataPoints[targetChartIndex].y = 1;
   }
   chart.render();
+});
+
+connection.on("ReceivePrivateMessage", function (message) {
+  alert(message);
 });
 
 connection.on("NextQuestionReceived", function (question, answers) {

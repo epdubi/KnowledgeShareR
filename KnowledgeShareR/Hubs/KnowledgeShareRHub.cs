@@ -29,18 +29,18 @@ namespace KnowledgeShareR.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            string username = Context.User.Identity.Name;
+            string userId = Context.UserIdentifier;
 
-            var isConnected = _db.ConnectedUsers.Any(x => x.UserName == username);
+            var isConnected = _db.ConnectedUsers.Any(x => x.AspNetUserId == userId);
 
             if (!isConnected)
             {
-                await _db.ConnectedUsers.AddAsync(new Models.ConnectedUser { ConnectionId = Context.ConnectionId, UserName = username });
+                await _db.ConnectedUsers.AddAsync(new Models.ConnectedUser { AspNetUserId = Context.UserIdentifier, ConnectionId = Context.ConnectionId, UserName = Context.User.Identity.Name });
                 await _db.SaveChangesAsync();
             }
             else
             {
-                var currentUser = await _db.ConnectedUsers.SingleAsync(x => x.UserName == username);
+                var currentUser = await _db.ConnectedUsers.SingleAsync(x => x.AspNetUserId == userId);
                 currentUser.ConnectionId = Context.ConnectionId;
                 _db.ConnectedUsers.Update(currentUser);
                 await _db.SaveChangesAsync();
@@ -54,10 +54,10 @@ namespace KnowledgeShareR.Hubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            string username = Context.User.Identity.Name;
+            string userId = Context.UserIdentifier;
 
-            var connectedUser = await _db.ConnectedUsers.Where(x => x.UserName == username).ToListAsync();
-            _db.ConnectedUsers.RemoveRange(connectedUser);
+            var connectedUser = await _db.ConnectedUsers.FirstOrDefaultAsync(x => x.AspNetUserId == userId);
+            _db.ConnectedUsers.Remove(connectedUser);
             await _db.SaveChangesAsync();
 
             var allUsers = await _db.ConnectedUsers.Select(x => x.UserName).ToListAsync();
@@ -72,6 +72,14 @@ namespace KnowledgeShareR.Hubs
             var userDisplay = userInfo != null ? userInfo.ProfilePicture : user;
 
             await Clients.All.SendAsync("ReceiveUserVote", userDisplay, message);
+        }
+
+
+        public async Task SendPrivateMessage(string user, string message)
+        {
+            var sendToUser = _db.ConnectedUsers.FirstOrDefault(x => x.UserName == user);
+            var timestampedMessage = $"{DateTime.Now} - {message}";
+            await Clients.User(sendToUser.AspNetUserId).SendAsync("ReceivePrivateMessage", timestampedMessage);
         }
 
         public async Task NextQuestion()

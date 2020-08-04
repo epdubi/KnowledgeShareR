@@ -1,0 +1,23 @@
+﻿@page
+@model KnowledgeShareR.Pages.PrivateMessageModel
+@{
+    ViewData["Title"] = "PrivateMessage";
+    var allUsers = Model.AllUsers;
+}
+
+<h1>PrivateMessage</h1>
+<div class="container">
+    
+    <div class="form-group col-12">
+        <form>
+            @Html.DropDownList("all-users",
+                              new SelectList(allUsers),
+                              "Select User",
+                              new { @class = "form-control" })
+            @Html.TextBox("message", null, new { @class = "form-control" })
+            <button id="privateMessageBtn" type="button">Send Message</button>
+        </form>
+    </div>
+</div>
+
+
