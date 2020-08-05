@@ -1,0 +1,36 @@
+﻿@page
+@model KnowledgeShareR.Pages.MessageModel
+@{
+    ViewData["Title"] = "Message";
+    var allUsers = Model.AllUsers;
+    var userGroups = Model.HubGroups;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="form-group col-6">
+            <h2>Message By User</h2>
+            <form>
+                @Html.DropDownList("all-users",
+                                  new SelectList(allUsers),
+                                  "Select User",
+                                  new { @class = "form-control" })
+                @Html.TextBox("privateMessage", null, new { @class = "form-control" })
+                <button id="privateMessageBtn" type="button">Send Message</button>
+            </form>
+        </div>
+        <div class="form-group col-6">
+            <h2>Message By Group</h2>
+            <form>
+                @Html.DropDownList("user-groups",
+                                  new SelectList(userGroups),
+                                  "Select Group",
+                                  new { @class = "form-control" })
+                @Html.TextBox("groupMessage", null, new { @class = "form-control" })
+                <button id="groupMessageBtn" type="button">Send Message</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+

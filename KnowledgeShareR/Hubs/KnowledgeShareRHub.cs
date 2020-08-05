@@ -82,6 +82,19 @@ namespace KnowledgeShareR.Hubs
             await Clients.User(sendToUser.AspNetUserId).SendAsync("ReceivePrivateMessage", timestampedMessage);
         }
 
+        public async Task SendGroupMessage(string group, string message)
+        {
+            await Clients.Group(group).SendAsync("ReceiveGroupMessage", message);
+        }
+
+        public async Task AddToGroup(string groupName)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+
+            await Clients.Group(groupName).SendAsync("ReceiveGroupAdd", $"{Context.ConnectionId} has joined the group {groupName}.");
+        }
+
+
         public async Task NextQuestion()
         {
             var allQuestions = await _db.Questions.Select(x => x).ToListAsync();

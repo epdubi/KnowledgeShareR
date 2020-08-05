@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace KnowledgeShareR.Pages
 {
-    public class PrivateMessageModel : PageModel
+    public class MessageModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
         public IConfiguration Configuration { get; }
@@ -16,7 +16,9 @@ namespace KnowledgeShareR.Pages
 
         public List<string> AllUsers { get; set; }
 
-        public PrivateMessageModel(ILogger<IndexModel> logger, IConfiguration configuration, KnowledgeShareDbContext dbContext)
+        public List<string> HubGroups => new List<string> { "Group1", "Group2" };
+
+        public MessageModel(ILogger<IndexModel> logger, IConfiguration configuration, KnowledgeShareDbContext dbContext)
         {
             _logger = logger;
             Configuration = configuration;

@@ -7,6 +7,8 @@ const connection = new signalR.HubConnectionBuilder()
 
 const castVoteBtn = document.getElementById("castVoteBtn");
 const privateMesssageBtn = document.getElementById("privateMessageBtn");
+const groupMesssageBtn = document.getElementById("groupMessageBtn");
+const hubGroupBtn = document.getElementById("hubGroupBtn");
 const userCountSpan = document.getElementById("user-count");
 const revealAnswerBtn = document.getElementById("reveal-answer");
 const nextQuestionBtn = document.getElementById("next-question");
@@ -45,11 +47,11 @@ if (privateMesssageBtn != undefined) {
     var usersDropdown = document.getElementById("all-users");
     var selectedUser = usersDropdown[usersDropdown.selectedIndex].value;
 
-    var message = document.getElementById("message").value;
+    var privateMessage = document.getElementById("privateMessage").value;
 
-    if (selectedUser && message) {
+    if (selectedUser && privateMessage) {
       connection
-        .invoke("SendPrivateMessage", selectedUser, message)
+        .invoke("SendPrivateMessage", selectedUser, privateMessage)
         .catch(function (err) {
           return alert(err.toString());
         });
@@ -57,7 +59,48 @@ if (privateMesssageBtn != undefined) {
       alert("Please select user and send message");
     }
     console.log(selectedUser);
-    console.log(message);
+    console.log(privateMessage);
+  });
+}
+
+if (groupMesssageBtn != undefined) {
+  groupMesssageBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+    var groupsDropdown = document.getElementById("user-groups");
+    var selectedGroup = groupsDropdown[groupsDropdown.selectedIndex].value;
+
+    var groupMessage = document.getElementById("groupMessage").value;
+
+    if (selectedGroup && groupMessage) {
+      connection
+        .invoke("SendGroupMessage", selectedGroup, groupMessage)
+        .catch(function (err) {
+          return alert(err.toString());
+        });
+    } else {
+      alert("Please select group and send message");
+    }
+    console.log(selectedGroup);
+    console.log(groupMessage);
+  });
+}
+
+if (hubGroupBtn != undefined) {
+  hubGroupBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+    console.log("hubGroupBtn Clicked!");
+    var hubGroupsDropdown = document.getElementById("hub-groups");
+    var selectedGroup =
+      hubGroupsDropdown[hubGroupsDropdown.selectedIndex].value;
+
+    if (selectedGroup) {
+      connection.invoke("AddToGroup", selectedGroup).catch(function (err) {
+        return alert(err.toString());
+      });
+    } else {
+      alert("Please select a group");
+    }
+    console.log(selectedGroup);
   });
 }
 
@@ -147,6 +190,14 @@ connection.on("ReceiveUserVote", function (profilePicture, message) {
 });
 
 connection.on("ReceivePrivateMessage", function (message) {
+  alert(message);
+});
+
+connection.on("ReceiveGroupMessage", function (message) {
+  alert(message);
+});
+
+connection.on("ReceiveGroupAdd", function (message) {
   alert(message);
 });
 
