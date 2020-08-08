@@ -31,22 +31,23 @@ namespace KnowledgeShareR.Hubs
         {
             string userId = Context.UserIdentifier;
 
-            var isConnected = _db.ConnectedUsers.Any(x => x.AspNetUserId == userId);
+            var isExisting = _db.ConnectedUsers.Any(x => x.AspNetUserId == userId);
 
-            if (!isConnected)
+            if (!isExisting)
             {
-                await _db.ConnectedUsers.AddAsync(new Models.ConnectedUser { AspNetUserId = Context.UserIdentifier, ConnectionId = Context.ConnectionId, UserName = Context.User.Identity.Name });
+                await _db.ConnectedUsers.AddAsync(new Models.ConnectedUser { AspNetUserId = Context.UserIdentifier, ConnectionId = Context.ConnectionId, UserName = Context.User.Identity.Name, IsDisconnected = false });
                 await _db.SaveChangesAsync();
             }
             else
             {
                 var currentUser = await _db.ConnectedUsers.SingleAsync(x => x.AspNetUserId == userId);
                 currentUser.ConnectionId = Context.ConnectionId;
+                currentUser.IsDisconnected = false;
                 _db.ConnectedUsers.Update(currentUser);
                 await _db.SaveChangesAsync();
             }
 
-            var allUsers = await _db.ConnectedUsers.Select(x => x.UserName).ToListAsync();
+            var allUsers = await _db.ConnectedUsers.Where(x => !x.IsDisconnected).Select(x => x.UserName).ToListAsync();
 
             await Clients.All.SendAsync("OnConnectedAsync", JsonConvert.SerializeObject(allUsers));
             await base.OnConnectedAsync();
@@ -55,12 +56,13 @@ namespace KnowledgeShareR.Hubs
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             string userId = Context.UserIdentifier;
-
             var connectedUser = await _db.ConnectedUsers.FirstOrDefaultAsync(x => x.AspNetUserId == userId);
-            _db.ConnectedUsers.Remove(connectedUser);
+            connectedUser.IsDisconnected = true;
+
+            _db.ConnectedUsers.Update(connectedUser);
             await _db.SaveChangesAsync();
 
-            var allUsers = await _db.ConnectedUsers.Select(x => x.UserName).ToListAsync();
+            var allUsers = await _db.ConnectedUsers.Where(x => !x.IsDisconnected).Select(x => x.UserName).ToListAsync();
 
             await Clients.All.SendAsync("OnDisconnectedAsync", JsonConvert.SerializeObject(allUsers));
             await base.OnDisconnectedAsync(exception);
@@ -84,14 +86,27 @@ namespace KnowledgeShareR.Hubs
 
         public async Task SendGroupMessage(string group, string message)
         {
+            var groupUsers = await _db.ConnectedUsers.Where(x => !x.IsDisconnected && x.GroupName == group).ToListAsync();
+
+            foreach (var groupUser in groupUsers)
+            {
+                await Groups.AddToGroupAsync(groupUser.ConnectionId, group);
+            }
+
             await Clients.Group(group).SendAsync("ReceiveGroupMessage", message);
         }
 
         public async Task AddToGroup(string groupName)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            string userId = Context.UserIdentifier;
+            var connectedUser = _db.ConnectedUsers.FirstOrDefault(x => x.AspNetUserId == userId);
+            connectedUser.GroupName = groupName;
 
-            await Clients.Group(groupName).SendAsync("ReceiveGroupAdd", $"{Context.ConnectionId} has joined the group {groupName}.");
+            _db.ConnectedUsers.Update(connectedUser);
+            _db.SaveChanges();
+
+            await Groups.AddToGroupAsync(connectedUser.ConnectionId, groupName);
+            await Clients.Group(groupName).SendAsync("ReceiveGroupAdd", $"{connectedUser.UserName} has joined the group {groupName}.");
         }
 
 

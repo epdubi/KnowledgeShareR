@@ -26,7 +26,7 @@ namespace KnowledgeShareR.Pages
         }
         public void OnGet()
         {
-            var connectedUsers = _db.ConnectedUsers.Select(x => x.UserName).ToList();
+            var connectedUsers = _db.ConnectedUsers.Where(x => !x.IsDisconnected).Select(x => x.UserName).ToList();
             AllUsers = connectedUsers;
         }
     }
