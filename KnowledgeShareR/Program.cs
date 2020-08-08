@@ -39,16 +39,24 @@ namespace KnowledgeShareR
                     if (!isQuestionTableEmpty)
                     {
                         context.Questions.Add(new Models.Question { Text = "What is your favorite color?", IsActive = true });
+                        context.Questions.Add(new Models.Question { Text = "Favorite lunch and learn restaurant?", IsActive = false });
                         context.SaveChanges();
                     }
 
                     if (!isAnswerTableEmpty)
                     {
-                        var firstQuestion = context.Questions.First();
+                        var firstQuestion = context.Questions.First(x => x.Text == "What is your favorite color?");
                         context.Answers.Add(new Models.Answer { QuestionId = firstQuestion.QuestionId, Text = "Blue", IsCorrect = false });
                         context.Answers.Add(new Models.Answer { QuestionId = firstQuestion.QuestionId, Text = "Green", IsCorrect = true });
                         context.Answers.Add(new Models.Answer { QuestionId = firstQuestion.QuestionId, Text = "Pink", IsCorrect = false });
                         context.Answers.Add(new Models.Answer { QuestionId = firstQuestion.QuestionId, Text = "Orange", IsCorrect = false });
+
+                        var secondQuestion = context.Questions.First(x => x.Text == "Favorite lunch and learn restaurant?");
+                        context.Answers.Add(new Models.Answer { QuestionId = secondQuestion.QuestionId, Text = "Jimmy Johns", IsCorrect = false });
+                        context.Answers.Add(new Models.Answer { QuestionId = secondQuestion.QuestionId, Text = "China King", IsCorrect = false });
+                        context.Answers.Add(new Models.Answer { QuestionId = secondQuestion.QuestionId, Text = "Noodles & Company", IsCorrect = true });
+                        context.Answers.Add(new Models.Answer { QuestionId = secondQuestion.QuestionId, Text = "Chick-fil-A", IsCorrect = false });
+
                         context.SaveChanges();
                     }
                     
